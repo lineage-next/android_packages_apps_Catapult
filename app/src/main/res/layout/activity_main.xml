@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="32dp"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <!-- Favorites Row -->
+        <TextView
+            android:id="@+id/favoritesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites"
+            android:layout_marginTop="16dp"
+            style="@style/Widget.Leanback.Row.Header"/>
+
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/favorites_grid"
+            android:layout_below="@id/favoritesTextView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:layout_marginTop="8dp"
+            style="AppListGridStyle"/>
+
+        <!-- All Apps Row -->
+        <TextView
+            android:id="@+id/otherAppsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/other_apps"
+            android:layout_below="@id/favorites_grid"
+            android:layout_marginTop="16dp"
+            style="@style/Widget.Leanback.Row.Header"/>
+
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/all_apps_grid"
+            android:layout_below="@id/otherAppsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"/>
+
+    </RelativeLayout>
+</LinearLayout>
