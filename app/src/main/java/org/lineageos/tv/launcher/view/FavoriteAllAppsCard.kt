@@ -1,11 +1,8 @@
 package org.lineageos.tv.launcher.view
 
-import android.animation.AnimatorInflater
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AppInfo
 
 class FavoriteAllAppsCard : Card {
     constructor(context: Context?) : super(context)

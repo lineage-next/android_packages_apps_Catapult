@@ -1,7 +1,6 @@
 package org.lineageos.tv.launcher
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.leanback.widget.HorizontalGridView
 import org.lineageos.tv.launcher.adapter.AppsAdapter

@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_mark_as_favorite"
-        android:title="@string/mark_as_favorite"
         android:icon="@drawable/ic_favorite"
-        android:iconTint="@android:color/black"/>
+        android:iconTint="@android:color/black"
+        android:title="@string/mark_as_favorite" />
     <item
         android:id="@+id/menu_uninstall"
-        android:title="@string/uninstall"
         android:icon="@drawable/ic_delete"
-        android:iconTint="@android:color/black"/>
+        android:iconTint="@android:color/black"
+        android:title="@string/uninstall" />
 </menu>

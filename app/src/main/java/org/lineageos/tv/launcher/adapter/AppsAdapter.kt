@@ -3,13 +3,8 @@ package org.lineageos.tv.launcher.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.view.AppCard
@@ -45,7 +40,8 @@ open class AppsAdapter(protected val mContext: Context) :
 
     protected open fun handleLongClick(app: Card): Boolean {
         val context = app.context
-        Toast.makeText(context, "long click " + app.getAppInfo()!!.mLabel, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "long click " + app.getAppInfo()!!.mLabel, Toast.LENGTH_SHORT)
+            .show()
 
         return false
     }

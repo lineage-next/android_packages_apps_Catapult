@@ -31,7 +31,8 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             val pm: PackageManager = mContext.packageManager
             val ai: ApplicationInfo = pm.getApplicationInfo(packageName, 0)
 
-            val appInfo = AppInfo(ai,
+            val appInfo = AppInfo(
+                ai,
                 mContext
             )
             mAppsList.add(appInfo)
@@ -65,15 +66,18 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
                     // Replace with your uninstall logic
                     true
                 }
+
                 R.id.menu_remove_favorite -> {
                     (anchorView as AppCard).getAppInfo()?.let {
                         AppManager.removeFavoriteApp(mContext, it)
                     }
                     true
                 }
+
                 R.id.menu_move -> {
                     true
                 }
+
                 else -> false
             }
         }

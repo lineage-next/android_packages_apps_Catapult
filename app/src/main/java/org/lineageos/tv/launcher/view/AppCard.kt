@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
@@ -28,7 +27,8 @@ open class AppCard : Card {
     init {
         mBannerView = findViewById(R.id.app_banner)
         mIconContainer = findViewById(R.id.app_with_icon)
-        stateListAnimator = AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
+        stateListAnimator =
+            AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
     }
 
     override fun inflate() {

@@ -7,54 +7,55 @@
     <include
         layout="@layout/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="48dp"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:padding="48dp">
 
         <!-- Favorites Row -->
         <TextView
             android:id="@+id/favoritesTextView"
+            style="@style/Widget.Leanback.Row.Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/favorites"
             android:layout_marginTop="16dp"
-            style="@style/Widget.Leanback.Row.Header"/>
+            android:text="@string/favorites" />
 
-        <androidx.leanback.widget.HorizontalGridView
-            android:id="@+id/favorites_grid"
-            android:layout_below="@id/favoritesTextView"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:clipChildren="false"
-            android:layout_marginTop="8dp"
-            style="AppListGridStyle"/>
-
-        <!-- All Apps Row -->
         <TextView
             android:id="@+id/otherAppsTextView"
+            style="@style/Widget.Leanback.Row.Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/other_apps"
             android:layout_below="@id/favorites_grid"
             android:layout_marginTop="16dp"
-            style="@style/Widget.Leanback.Row.Header"/>
+            android:text="@string/other_apps" />
+
+        <!-- All Apps Row -->
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/favorites_grid"
+            style="AppListGridStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/favoritesTextView"
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="8dp" />
 
         <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/all_apps_grid"
-            android:layout_below="@id/otherAppsTextView"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:padding="8dp"
+            android:layout_below="@id/otherAppsTextView"
             android:layout_marginTop="8dp"
+            android:clipChildren="false"
             android:clipToPadding="false"
-            android:clipChildren="false"/>
+            android:padding="8dp" />
 
     </RelativeLayout>
+
 </LinearLayout>

@@ -2,7 +2,6 @@ package org.lineageos.tv.launcher.utils
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
