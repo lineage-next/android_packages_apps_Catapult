@@ -10,15 +10,15 @@ import org.lineageos.tv.launcher.utils.AppManager
 
 
 class MainActivity : Activity() {
-    private lateinit var favoritesAdapter: FavoritesAdapter
+    private lateinit var mFavoritesAdapter: FavoritesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val favoritesGridView: HorizontalGridView = findViewById(R.id.favorites_grid)
-        favoritesAdapter = FavoritesAdapter(applicationContext)
-        favoritesGridView.adapter = favoritesAdapter
+        mFavoritesAdapter = FavoritesAdapter(applicationContext)
+        favoritesGridView.adapter = mFavoritesAdapter
 
         val allAppsGridView: HorizontalGridView = findViewById(R.id.all_apps_grid)
         val allAppsAdapter = AppsAdapter(applicationContext)
@@ -27,6 +27,6 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        favoritesAdapter.updateFavoriteApps(AppManager.getFavoriteApps(applicationContext))
+        mFavoritesAdapter.updateFavoriteApps(AppManager.getFavoriteApps(applicationContext))
     }
 }
