@@ -1,7 +1,6 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ open class AppsAdapter(protected val mContext: Context) :
     protected open val mLayoutId = R.layout.app_card
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
+        View.OnClickListener, View.OnLongClickListener {
 
         val mAppNameView: TextView
         val mIconView: ImageView
@@ -35,10 +34,15 @@ open class AppsAdapter(protected val mContext: Context) :
             mBannerView = itemView.findViewById(R.id.app_banner)
             mIconContainer = itemView.findViewById(R.id.app_with_icon)
             itemView.setOnClickListener(this)
+            itemView.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
             handleClick(mAppsList[adapterPosition], v)
+        }
+
+        override fun onLongClick(v: View): Boolean {
+            return handleLongClick(mAppsList[adapterPosition], v)
         }
     }
 
@@ -46,6 +50,13 @@ open class AppsAdapter(protected val mContext: Context) :
         val context = v.context
         context.startActivity(app.mLaunchIntent)
         Toast.makeText(context, app.mLabel, Toast.LENGTH_SHORT).show()
+    }
+
+    protected open fun handleLongClick(app: Launchable, v: View): Boolean {
+        val context = v.context
+        Toast.makeText(context, "long click " + app.mLabel, Toast.LENGTH_SHORT).show()
+
+        return false
     }
 
     protected open fun getaAppsList(): ArrayList<Launchable> {

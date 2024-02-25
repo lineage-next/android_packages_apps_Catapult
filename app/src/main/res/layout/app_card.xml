@@ -9,7 +9,8 @@
     android:stateListAnimator="@anim/app_card_state_animator"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:clickable="true">
+    android:clickable="true"
+    android:longClickable="true">
 
     <LinearLayout
         android:id="@+id/app_with_icon"
