@@ -6,7 +6,6 @@
     android:layout_height="84dp"
     android:layout_marginEnd="12dp"
     android:background="@drawable/app_card_background"
-    android:stateListAnimator="@anim/app_card_state_animator"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:clickable="true"

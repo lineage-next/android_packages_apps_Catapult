@@ -17,11 +17,11 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         val favoritesGridView: HorizontalGridView = findViewById(R.id.favorites_grid)
-        mFavoritesAdapter = FavoritesAdapter(applicationContext)
+        mFavoritesAdapter = FavoritesAdapter(this)
         favoritesGridView.adapter = mFavoritesAdapter
 
         val allAppsGridView: HorizontalGridView = findViewById(R.id.all_apps_grid)
-        val allAppsAdapter = AppsAdapter(applicationContext)
+        val allAppsAdapter = AppsAdapter(this)
         allAppsGridView.adapter = allAppsAdapter
     }
 

@@ -1,7 +1,6 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,48 +12,40 @@ import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
+import org.lineageos.tv.launcher.view.AppCard
+import org.lineageos.tv.launcher.view.Card
 
 open class AppsAdapter(protected val mContext: Context) :
     RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
 
     protected val mAppsList by lazy { getaAppsList() }
-    protected open val mLayoutId = R.layout.app_card
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener, View.OnLongClickListener {
 
-        val mAppNameView: TextView
-        val mIconView: ImageView
-        val mBannerView: ImageView?
-        val mIconContainer: LinearLayout?
-
         init {
-            mAppNameView = itemView.findViewById(R.id.app_name)
-            mIconView = itemView.findViewById(R.id.app_icon)
-            mBannerView = itemView.findViewById(R.id.app_banner)
-            mIconContainer = itemView.findViewById(R.id.app_with_icon)
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
         }
 
         override fun onClick(v: View) {
-            handleClick(mAppsList[adapterPosition], v)
+            handleClick(v as Card)
         }
 
         override fun onLongClick(v: View): Boolean {
-            return handleLongClick(mAppsList[adapterPosition], v)
+            return handleLongClick(v as Card)
         }
     }
 
-    protected open fun handleClick(app: Launchable, v: View) {
-        val context = v.context
-        context.startActivity(app.mLaunchIntent)
-        Toast.makeText(context, app.mLabel, Toast.LENGTH_SHORT).show()
+    protected open fun handleClick(app: Card) {
+        val context = app.context
+        context.startActivity(app.getAppInfo()!!.mLaunchIntent)
+        Toast.makeText(context, app.getAppInfo()!!.mLabel, Toast.LENGTH_SHORT).show()
     }
 
-    protected open fun handleLongClick(app: Launchable, v: View): Boolean {
-        val context = v.context
-        Toast.makeText(context, "long click " + app.mLabel, Toast.LENGTH_SHORT).show()
+    protected open fun handleLongClick(app: Card): Boolean {
+        val context = app.context
+        Toast.makeText(context, "long click " + app.getAppInfo()!!.mLabel, Toast.LENGTH_SHORT).show()
 
         return false
     }
@@ -64,20 +55,7 @@ open class AppsAdapter(protected val mContext: Context) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        val appLabel: String = mAppsList[i].mLabel
-        val textView = viewHolder.mAppNameView
-        textView.text = appLabel
-
-        if (mAppsList[i] is AppInfo && (mAppsList[i] as AppInfo).mBanner != null
-            && viewHolder.mBannerView != null && viewHolder.mIconContainer != null) {
-            // App with a banner
-            viewHolder.mBannerView.setImageDrawable((mAppsList[i] as AppInfo).mBanner)
-            viewHolder.mBannerView.visibility = View.VISIBLE
-            viewHolder.mIconContainer.visibility = View.GONE
-        } else {
-            // App with an icon
-            viewHolder.mIconView.setImageDrawable(mAppsList[i].mIcon)
-        }
+        (viewHolder.itemView as AppCard).setAppInfo(mAppsList[i])
     }
 
     override fun getItemCount(): Int {
@@ -85,9 +63,7 @@ open class AppsAdapter(protected val mContext: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view: View = inflater.inflate(mLayoutId, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(AppCard(mContext))
     }
 }
 

@@ -22,11 +22,15 @@ object AppManager {
     }
 
     fun removeFavoriteApp(context: Context, app: Launchable) {
+        removeFavoriteApp(context, app.mPackageName)
+    }
+
+    fun removeFavoriteApp(context: Context, packageName: String) {
         val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
         val favoritesSet =
             sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
         val newFavoritesSet = HashSet(favoritesSet) // Make a copy
-        newFavoritesSet.remove(app.mPackageName)
+        newFavoritesSet.remove(packageName)
         val editor = sharedPreferences.edit()
         editor.putStringSet("favoriteApps", newFavoritesSet)
         editor.apply()
