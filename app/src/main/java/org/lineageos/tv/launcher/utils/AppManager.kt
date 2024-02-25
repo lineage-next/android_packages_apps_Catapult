@@ -2,6 +2,7 @@ package org.lineageos.tv.launcher.utils
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
@@ -13,12 +14,7 @@ object AppManager {
         val apps = pm.queryIntentActivities(intent, 0)
         val appsList: ArrayList<Launchable> = ArrayList()
         for (app in apps) {
-            val appInfo = AppInfo(
-                app.loadLabel(pm).toString(),
-                app.activityInfo.packageName,
-                app.activityInfo.loadIcon(pm),
-                context
-            )
+            val appInfo = AppInfo(app, context)
             appsList.add(appInfo)
         }
 

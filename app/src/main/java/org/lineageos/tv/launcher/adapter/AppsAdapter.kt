@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
 
@@ -22,12 +24,16 @@ open class AppsAdapter(protected val mContext: Context) :
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        var mAppNameView: TextView
-        var mIconView: ImageView
+        val mAppNameView: TextView
+        val mIconView: ImageView
+        val mBannerView: ImageView?
+        val mIconContainer: LinearLayout?
 
         init {
-            mAppNameView = itemView.findViewById<View>(R.id.app_name) as TextView
-            mIconView = itemView.findViewById<View>(R.id.app_icon) as ImageView
+            mAppNameView = itemView.findViewById(R.id.app_name)
+            mIconView = itemView.findViewById(R.id.app_icon)
+            mBannerView = itemView.findViewById(R.id.app_banner)
+            mIconContainer = itemView.findViewById(R.id.app_with_icon)
             itemView.setOnClickListener(this)
         }
 
@@ -51,9 +57,16 @@ open class AppsAdapter(protected val mContext: Context) :
         val textView = viewHolder.mAppNameView
         textView.text = appLabel
 
-        val imageView = viewHolder.mIconView
-        val appIcon: Drawable = mAppsList[i].mIcon
-        imageView.setImageDrawable(appIcon)
+        if (mAppsList[i] is AppInfo && (mAppsList[i] as AppInfo).mBanner != null
+            && viewHolder.mBannerView != null && viewHolder.mIconContainer != null) {
+            // App with a banner
+            viewHolder.mBannerView.setImageDrawable((mAppsList[i] as AppInfo).mBanner)
+            viewHolder.mBannerView.visibility = View.VISIBLE
+            viewHolder.mIconContainer.visibility = View.GONE
+        } else {
+            // App with an icon
+            viewHolder.mIconView.setImageDrawable(mAppsList[i].mIcon)
+        }
     }
 
     override fun getItemCount(): Int {

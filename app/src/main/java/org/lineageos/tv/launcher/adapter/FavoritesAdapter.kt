@@ -25,10 +25,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             val pm: PackageManager = mContext.packageManager
             val ai: ApplicationInfo = pm.getApplicationInfo(packageName, 0)
 
-            val appInfo = AppInfo(
-                pm.getApplicationLabel(ai).toString(),
-                packageName,
-                pm.getApplicationIcon(ai),
+            val appInfo = AppInfo(ai,
                 mContext
             )
             mAppsList.add(appInfo)
