@@ -72,17 +72,17 @@ object AppManager {
         return sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
     }
 
-    fun uninstallApp(context: Context, packageName: String) {
-        val packageUri = Uri.parse("package:$packageName")
-        val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
-        (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
-    }
-
     fun setFavorites(context: Context, newFavoritesSet: LinkedHashSet<String>) {
         val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putStringSet("favoriteApps", newFavoritesSet)
         editor.apply()
+    }
+
+    fun uninstallApp(context: Context, packageName: String) {
+        val packageUri = Uri.parse("package:$packageName")
+        val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
+        (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
     }
 
     interface OnFavoritesChangeListener {
