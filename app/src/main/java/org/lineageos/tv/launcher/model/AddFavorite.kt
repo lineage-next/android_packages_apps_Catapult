@@ -8,7 +8,7 @@ import org.lineageos.tv.launcher.AddFavoriteActivity
 class AddFavorite(
     label: String,
     icon: Drawable,
-    context: Context
+    context: Context,
 ) : Launchable(label, "", icon, context) {
 
     override fun setIntent(): Intent {

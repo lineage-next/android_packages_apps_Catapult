@@ -10,6 +10,12 @@ import org.lineageos.tv.launcher.model.Launchable
 
 
 object AppManager {
+    private var mFavoritesChangeListener: OnFavoritesChangeListener? = null
+
+    fun setFavoritesListener(listener: OnFavoritesChangeListener) {
+        mFavoritesChangeListener = listener
+    }
+
     fun getInstalledApps(context: Context): ArrayList<Launchable> {
         val pm = context.packageManager
         val intent = Intent(Intent.ACTION_MAIN, null)
@@ -37,6 +43,9 @@ object AppManager {
         val editor = sharedPreferences.edit()
         editor.putStringSet("favoriteApps", newFavoritesSet)
         editor.apply()
+
+        // Notify
+        mFavoritesChangeListener?.onFavoriteRemoved(packageName)
     }
 
     fun addFavoriteApp(context: Context, app: Launchable) {
@@ -52,6 +61,9 @@ object AppManager {
         val editor = sharedPreferences.edit()
         editor.putStringSet("favoriteApps", newFavoritesSet)
         editor.apply()
+
+        // Notify
+        mFavoritesChangeListener?.onFavoriteAdded(packageName)
     }
 
     fun getFavoriteApps(context: Context): Set<String> {
@@ -64,5 +76,10 @@ object AppManager {
         val packageUri = Uri.parse("package:$packageName")
         val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
         (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
+    }
+
+    interface OnFavoritesChangeListener {
+        fun onFavoriteAdded(packageName: String)
+        fun onFavoriteRemoved(packageName: String)
     }
 }

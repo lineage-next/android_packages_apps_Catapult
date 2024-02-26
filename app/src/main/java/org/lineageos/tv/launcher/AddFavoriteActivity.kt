@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.WindowManager
 import androidx.leanback.widget.VerticalGridView
 import org.lineageos.tv.launcher.adapter.AllAppsFavoritesAdapter
+import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 
 class AddFavoriteActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

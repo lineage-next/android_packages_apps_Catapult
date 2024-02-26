@@ -2,8 +2,6 @@ package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
 import android.view.ViewGroup
-import android.widget.ImageView
-import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.view.Card
 import org.lineageos.tv.launcher.view.FavoriteAllAppsCard
@@ -16,12 +14,13 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun handleClick(app: Card) {
+        app as FavoriteAllAppsCard
         if (mFavoritePackageNames.contains(app.mPackageName)) {
             AppManager.removeFavoriteApp(mContext, app.mPackageName)
-            app.mIconView.setImageDrawable(mContext.getDrawable(R.drawable.ic_add))
+            app.setActionAdd()
         } else {
             AppManager.addFavoriteApp(mContext, app.mPackageName)
-            app.mIconView.setImageDrawable(mContext.getDrawable(R.drawable.ic_remove))
+            app.setActionRemove()
         }
 
         mFavoritePackageNames = AppManager.getFavoriteApps(mContext) as HashSet<String>
@@ -29,11 +28,11 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
 
 
     override fun onBindViewHolder(viewHolder: AppsAdapter.ViewHolder, i: Int) {
-        (viewHolder.itemView as FavoriteAllAppsCard).setAppInfo(mAppsList[i])
+        val card = viewHolder.itemView as FavoriteAllAppsCard
+        card.setAppInfo(mAppsList[i])
 
         if (mFavoritePackageNames.contains(mAppsList[i].mPackageName)) {
-            val actionImage = viewHolder.itemView.findViewById<ImageView>(R.id.action_image)
-            actionImage.setImageDrawable(mContext.getDrawable(R.drawable.ic_remove))
+            card.setActionRemove()
         }
     }
 

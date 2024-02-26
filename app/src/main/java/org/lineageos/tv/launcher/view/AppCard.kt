@@ -11,8 +11,8 @@ import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
 open class AppCard : Card {
-    val mBannerView: ImageView
-    val mIconContainer: LinearLayout
+    val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
+    val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
     constructor(context: Context?) : super(context)
 
@@ -25,8 +25,6 @@ open class AppCard : Card {
     )
 
     init {
-        mBannerView = findViewById(R.id.app_banner)
-        mIconContainer = findViewById(R.id.app_with_icon)
         stateListAnimator =
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
     }
@@ -34,7 +32,6 @@ open class AppCard : Card {
     override fun inflate() {
         inflate(context, R.layout.app_card, this)
     }
-
 
     override fun setAppInfo(appInfo: Launchable) {
         super.setAppInfo(appInfo)

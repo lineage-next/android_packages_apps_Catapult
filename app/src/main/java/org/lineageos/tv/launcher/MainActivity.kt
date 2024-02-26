@@ -9,13 +9,15 @@ import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 import org.lineageos.tv.launcher.utils.AppManager
 
 
-class MainActivity : Activity() {
+class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
     private lateinit var mAllAppsGridView: AppsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AppManager.setFavoritesListener(this)
 
         val favoritesGridView: HorizontalGridView = findViewById(R.id.favorites_grid)
         mFavoritesAdapter = FavoritesAdapter(this)
@@ -26,10 +28,6 @@ class MainActivity : Activity() {
         allAppsGridView.adapter = mAllAppsGridView
     }
 
-    override fun onResume() {
-        super.onResume()
-        mFavoritesAdapter.updateFavoriteApps(AppManager.getFavoriteApps(this))
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_UNINSTALL) {
@@ -41,5 +39,13 @@ class MainActivity : Activity() {
 
     companion object {
         const val REQUEST_CODE_UNINSTALL = 1
+    }
+
+    override fun onFavoriteAdded(packageName: String) {
+        mFavoritesAdapter.addItem(packageName)
+    }
+
+    override fun onFavoriteRemoved(packageName: String) {
+        mFavoritesAdapter.removeItem(packageName)
     }
 }
