@@ -36,11 +36,15 @@ object AppManager {
     }
 
     fun addFavoriteApp(context: Context, app: Launchable) {
+        addFavoriteApp(context, app.mPackageName)
+    }
+
+    fun addFavoriteApp(context: Context, packageName: String) {
         val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
         val favoritesSet =
             sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
         val newFavoritesSet = HashSet(favoritesSet) // Make a copy
-        newFavoritesSet.add(app.mPackageName)
+        newFavoritesSet.add(packageName)
         val editor = sharedPreferences.edit()
         editor.putStringSet("favoriteApps", newFavoritesSet)
         editor.apply()

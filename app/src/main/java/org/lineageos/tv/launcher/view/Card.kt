@@ -1,6 +1,7 @@
 package org.lineageos.tv.launcher.view
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -11,8 +12,9 @@ import org.lineageos.tv.launcher.model.Launchable
 open class Card : LinearLayout {
     val mIconView: ImageView
     val mNameView: TextView
-
-    protected var mAppInfo: Launchable? = null
+    var mPackageName: String = ""
+    var mLabel: String = ""
+    var mLaunchIntent: Intent? = null
 
     constructor(context: Context?) : super(context)
 
@@ -35,12 +37,10 @@ open class Card : LinearLayout {
     }
 
     open fun setAppInfo(appInfo: Launchable) {
-        mAppInfo = appInfo
         mNameView.text = appInfo.mLabel
         mIconView.setImageDrawable(appInfo.mIcon)
-    }
-
-    fun getAppInfo(): Launchable? {
-        return mAppInfo
+        mLabel = appInfo.mLabel
+        mPackageName = appInfo.mPackageName
+        mLaunchIntent = appInfo.mLaunchIntent
     }
 }

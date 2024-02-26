@@ -16,11 +16,11 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun handleClick(app: Card) {
-        if (mFavoritePackageNames.contains(app.getAppInfo()!!.mPackageName)) {
-            AppManager.removeFavoriteApp(mContext, app.getAppInfo()!!.mPackageName)
+        if (mFavoritePackageNames.contains(app.mPackageName)) {
+            AppManager.removeFavoriteApp(mContext, app.mPackageName)
             app.mIconView.setImageDrawable(mContext.getDrawable(R.drawable.ic_add))
         } else {
-            AppManager.addFavoriteApp(mContext, app.getAppInfo()!!)
+            AppManager.addFavoriteApp(mContext, app.mPackageName)
             app.mIconView.setImageDrawable(mContext.getDrawable(R.drawable.ic_remove))
         }
 

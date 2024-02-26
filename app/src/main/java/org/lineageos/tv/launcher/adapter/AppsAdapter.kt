@@ -34,8 +34,8 @@ open class AppsAdapter(protected val mContext: Context) :
 
     protected open fun handleClick(app: Card) {
         val context = app.context
-        context.startActivity(app.getAppInfo()!!.mLaunchIntent)
-        Toast.makeText(context, app.getAppInfo()!!.mLabel, Toast.LENGTH_SHORT).show()
+        context.startActivity(app.mLaunchIntent)
+        Toast.makeText(context, app.mLabel, Toast.LENGTH_SHORT).show()
     }
 
     protected open fun handleLongClick(app: Card): Boolean {
