@@ -1,9 +1,13 @@
 package org.lineageos.tv.launcher.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import org.lineageos.tv.launcher.MainActivity
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
+
 
 object AppManager {
     fun getInstalledApps(context: Context): ArrayList<Launchable> {
@@ -54,5 +58,11 @@ object AppManager {
         val sharedPreferences =
             context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
         return sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
+    }
+
+    fun uninstallApp(context: Context, packageName: String) {
+        val packageUri = Uri.parse("package:$packageName")
+        val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
+        (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
     }
 }
