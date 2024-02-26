@@ -35,14 +35,9 @@ object AppManager {
     }
 
     fun removeFavoriteApp(context: Context, packageName: String) {
-        val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
-        val favoritesSet =
-            sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
-        val newFavoritesSet = HashSet(favoritesSet) // Make a copy
-        newFavoritesSet.remove(packageName)
-        val editor = sharedPreferences.edit()
-        editor.putStringSet("favoriteApps", newFavoritesSet)
-        editor.apply()
+        val favoriteApps = getFavoriteApps(context)
+        favoriteApps.remove(packageName)
+        setFavorites(context, favoriteApps)
 
         // Notify
         mFavoritesChangeListener?.onFavoriteRemoved(packageName)
@@ -53,29 +48,29 @@ object AppManager {
     }
 
     fun addFavoriteApp(context: Context, packageName: String) {
-        val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
-        val favoritesSet =
-            sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
-        val newFavoritesSet = HashSet(favoritesSet) // Make a copy
-        newFavoritesSet.add(packageName)
-        val editor = sharedPreferences.edit()
-        editor.putStringSet("favoriteApps", newFavoritesSet)
-        editor.apply()
+        val favoriteApps = getFavoriteApps(context) as ArrayList
+        favoriteApps.add(packageName)
+        setFavorites(context, favoriteApps)
 
         // Notify
         mFavoritesChangeListener?.onFavoriteAdded(packageName)
     }
 
-    fun getFavoriteApps(context: Context): Set<String> {
+    fun getFavoriteApps(context: Context): ArrayList<String> {
         val sharedPreferences =
             context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
-        return sharedPreferences.getStringSet("favoriteApps", HashSet()) ?: HashSet()
+        val serializedList = sharedPreferences.getString("favoriteApps", "") ?: ""
+        if (serializedList == "") {
+            return ArrayList()
+        }
+        return ArrayList(serializedList.split(","))
     }
 
-    fun setFavorites(context: Context, newFavoritesSet: LinkedHashSet<String>) {
+    fun setFavorites(context: Context, newFavoritesSet: ArrayList<String>) {
         val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putStringSet("favoriteApps", newFavoritesSet)
+        val serializedList = newFavoritesSet.joinToString(",")
+        editor.putString("favoriteApps", serializedList)
         editor.apply()
     }
 

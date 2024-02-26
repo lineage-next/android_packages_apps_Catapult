@@ -31,7 +31,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         return list
     }
 
-    fun updateFavoriteApps(packageNames: Set<String>) {
+    fun updateFavoriteApps(packageNames: List<String>) {
         for (packageName in packageNames) {
             val pm: PackageManager = mContext.packageManager
             try {
@@ -126,7 +126,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         app.setMoveDone()
 
         // Save new favorites order
-        val newFavoritesSet = LinkedHashSet<String>();
+        val newFavoritesSet = ArrayList<String>();
         for (a in mAppsList) {
             if (a.mPackageName != "") {
                 newFavoritesSet.add(a.mPackageName)

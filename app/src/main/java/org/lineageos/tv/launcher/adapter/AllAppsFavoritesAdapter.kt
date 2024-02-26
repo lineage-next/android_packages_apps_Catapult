@@ -7,10 +7,10 @@ import org.lineageos.tv.launcher.view.Card
 import org.lineageos.tv.launcher.view.FavoriteAllAppsCard
 
 class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
-    private var mFavoritePackageNames = HashSet<String>()
+    private var mFavoritePackageNames = ArrayList<String>()
 
     init {
-        mFavoritePackageNames = AppManager.getFavoriteApps(mContext) as HashSet<String>
+        mFavoritePackageNames = AppManager.getFavoriteApps(mContext)
     }
 
     override fun handleClick(app: Card) {
@@ -23,7 +23,7 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
             app.setActionRemove()
         }
 
-        mFavoritePackageNames = AppManager.getFavoriteApps(mContext) as HashSet<String>
+        mFavoritePackageNames = AppManager.getFavoriteApps(mContext)
     }
 
 
