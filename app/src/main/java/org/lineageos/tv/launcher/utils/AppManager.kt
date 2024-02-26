@@ -78,6 +78,13 @@ object AppManager {
         (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
     }
 
+    fun setFavorites(context: Context, newFavoritesSet: LinkedHashSet<String>) {
+        val sharedPreferences = context.getSharedPreferences("Favorites", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putStringSet("favoriteApps", newFavoritesSet)
+        editor.apply()
+    }
+
     interface OnFavoritesChangeListener {
         fun onFavoriteAdded(packageName: String)
         fun onFavoriteRemoved(packageName: String)

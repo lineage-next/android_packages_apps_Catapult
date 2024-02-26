@@ -1,6 +1,8 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -11,6 +13,7 @@ import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.view.AppCard
 import org.lineageos.tv.launcher.view.Card
+import org.lineageos.tv.launcher.view.FavoriteCard
 
 open class AppsAdapter(protected val mContext: Context) :
     RecyclerView.Adapter<AppsAdapter.ViewHolder>() {
@@ -18,11 +21,12 @@ open class AppsAdapter(protected val mContext: Context) :
     protected val mAppsList by lazy { getaAppsList() }
 
     open inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener, View.OnLongClickListener {
+        View.OnClickListener, View.OnLongClickListener, View.OnKeyListener {
 
         init {
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
+            itemView.setOnKeyListener(this)
         }
 
         override fun onClick(v: View) {
@@ -32,6 +36,14 @@ open class AppsAdapter(protected val mContext: Context) :
         override fun onLongClick(v: View): Boolean {
             return handleLongClick(v as Card)
         }
+
+        override fun onKey(v: View, keyCode: Int, keyEvent: KeyEvent): Boolean {
+            return handleKey(v, keyCode, keyEvent)
+        }
+    }
+
+    protected open fun handleKey(v: View, keyCode: Int, keyEvent: KeyEvent): Boolean {
+        return false
     }
 
     protected open fun handleClick(app: Card) {
@@ -84,6 +96,9 @@ open class AppsAdapter(protected val mContext: Context) :
                 }
 
                 R.id.menu_move -> {
+                    if (anchorView is FavoriteCard) {
+                        anchorView.setMoving()
+                    }
                     true
                 }
 
@@ -94,4 +109,3 @@ open class AppsAdapter(protected val mContext: Context) :
         popupMenu.show()
     }
 }
-

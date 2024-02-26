@@ -24,7 +24,7 @@ class FavoriteAllAppsCard : Card {
     }
 
     override fun inflate() {
-        inflate(context, R.layout.favorites_app_card, this)
+        inflate(context, R.layout.favorites_add_app_card, this)
     }
 
     fun setActionAdd() {
