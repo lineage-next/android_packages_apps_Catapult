@@ -1,6 +1,8 @@
 <resources>
 
-    <style name="Theme.TvTrebuchet" parent="Theme.Leanback" />
+    <style name="Theme.TvTrebuchet" parent="Theme.Leanback">
+        <item name="android:windowBackground">#121212</item>
+    </style>
 
     <style name="Theme.TvTrebuchet.AddFavorite" parent="Theme.Leanback">
         <item name="android:windowIsTranslucent">true</item>
