@@ -5,19 +5,18 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.leanback.widget.HorizontalGridView
+import androidx.leanback.widget.VerticalGridView
 import androidx.tvprovider.media.tv.TvContractCompat
 import org.lineageos.tv.launcher.adapter.AppsAdapter
 import org.lineageos.tv.launcher.adapter.FavoritesAdapter
+import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
 import org.lineageos.tv.launcher.adapter.WatchNextAdapter
+import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
-import org.lineageos.tv.launcher.utils.Suggestions
 
 
 class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
-    private lateinit var mAllAppsGridView: AppsAdapter
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,17 +25,15 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
 
         AppManager.setFavoritesListener(this)
 
-        val favoritesGridView: HorizontalGridView = findViewById(R.id.favorites_grid)
+        val mainItems = ArrayList<MainRowItem>()
         mFavoritesAdapter = FavoritesAdapter(this)
-        favoritesGridView.adapter = mFavoritesAdapter
+        mainItems.add(MainRowItem(getString(R.string.favorites), mFavoritesAdapter))
+        mainItems.add(MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this)))
+        mainItems.add(MainRowItem(getString(R.string.other_apps), AppsAdapter(this)))
 
-        val watchNextGridView: HorizontalGridView = findViewById(R.id.watch_next_grid)
-        val watchNextAdapter = WatchNextAdapter(this)
-        watchNextGridView.adapter = watchNextAdapter
-
-        val allAppsGridView: HorizontalGridView = findViewById(R.id.all_apps_grid)
-        mAllAppsGridView = AppsAdapter(this)
-        allAppsGridView.adapter = mAllAppsGridView
+        val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
+        val mainVerticalAdapter = MainVerticalAdapter(this, mainItems)
+        mainVerticalGridView.adapter = mainVerticalAdapter
 
         if (checkCallingOrSelfPermission(TvContractCompat.PERMISSION_READ_TV_LISTINGS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(TvContractCompat.PERMISSION_READ_TV_LISTINGS), 0)
