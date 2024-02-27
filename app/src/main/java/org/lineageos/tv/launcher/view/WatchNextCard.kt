@@ -1,16 +1,17 @@
 package org.lineageos.tv.launcher.view
 
 import android.animation.AnimatorInflater
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.tvprovider.media.tv.WatchNextProgram
+import com.bumptech.glide.Glide
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AppInfo
-import org.lineageos.tv.launcher.model.Launchable
 
-open class AppCard : Card {
+open class WatchNextCard : Card {
     val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
@@ -33,17 +34,12 @@ open class AppCard : Card {
         inflate(context, R.layout.app_card, this)
     }
 
-    override fun setCardInfo(appInfo: Launchable) {
-        super.setCardInfo(appInfo)
-
-        if (appInfo is AppInfo && appInfo.mBanner != null) {
-            // App with a banner
-            mBannerView.setImageDrawable(appInfo.mBanner)
-            mBannerView.visibility = View.VISIBLE
-            mIconContainer.visibility = View.GONE
-        } else {
-            // App with an icon
-            mIconView.setImageDrawable(appInfo.mIcon)
-        }
+    @SuppressLint("RestrictedApi")
+    fun setWatchNextInfo(info: WatchNextProgram) {
+        Glide.with(this).load(info.posterArtUri).into(mBannerView);
+        mNameView.text = info.episodeTitle
+        mBannerView.visibility = View.VISIBLE
+        mIconContainer.visibility = View.GONE
+        mLaunchIntent = info.intent
     }
 }

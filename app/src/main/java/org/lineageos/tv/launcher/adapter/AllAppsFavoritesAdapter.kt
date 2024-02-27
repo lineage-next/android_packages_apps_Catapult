@@ -29,7 +29,7 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
 
     override fun onBindViewHolder(viewHolder: AppsAdapter.ViewHolder, i: Int) {
         val card = viewHolder.itemView as FavoriteAllAppsCard
-        card.setAppInfo(mAppsList[i])
+        card.setCardInfo(mAppsList[i])
 
         if (mFavoritePackageNames.contains(mAppsList[i].mPackageName)) {
             card.setActionRemove()

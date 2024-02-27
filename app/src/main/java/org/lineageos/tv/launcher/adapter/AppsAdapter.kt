@@ -1,7 +1,6 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +61,7 @@ open class AppsAdapter(protected val mContext: Context) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        (viewHolder.itemView as AppCard).setAppInfo(mAppsList[i])
+        (viewHolder.itemView as AppCard).setCardInfo(mAppsList[i])
     }
 
     override fun getItemCount(): Int {

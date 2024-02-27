@@ -25,16 +25,6 @@
             android:layout_marginTop="16dp"
             android:text="@string/favorites" />
 
-        <TextView
-            android:id="@+id/otherAppsTextView"
-            style="@style/Widget.Leanback.Row.Header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/favorites_grid"
-            android:layout_marginTop="16dp"
-            android:text="@string/other_apps" />
-
-        <!-- All Apps Row -->
         <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/favorites_grid"
             style="AppListGridStyle"
@@ -45,6 +35,35 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:padding="8dp" />
+
+        <!-- Watch next Row -->
+        <TextView
+            android:id="@+id/watchNextTextView"
+            style="@style/Widget.Leanback.Row.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/favorites_grid"
+            android:text="@string/watch_next" />
+
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/watch_next_grid"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/watchNextTextView"
+            android:layout_marginTop="8dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/otherAppsTextView"
+            style="@style/Widget.Leanback.Row.Header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/watch_next_grid"
+            android:layout_marginTop="16dp"
+            android:text="@string/other_apps" />
 
         <androidx.leanback.widget.HorizontalGridView
             android:id="@+id/all_apps_grid"

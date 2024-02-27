@@ -34,7 +34,7 @@ open class Card : LinearLayout {
         inflate(context, R.layout.app_card, this)
     }
 
-    open fun setAppInfo(appInfo: Launchable) {
+    open fun setCardInfo(appInfo: Launchable) {
         mNameView.text = appInfo.mLabel
         mIconView.setImageDrawable(appInfo.mIcon)
         mLabel = appInfo.mLabel

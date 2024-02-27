@@ -1,10 +1,8 @@
 package org.lineageos.tv.launcher.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +11,9 @@ import org.lineageos.tv.launcher.model.AddFavorite
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
-import org.lineageos.tv.launcher.view.AppCard
 import org.lineageos.tv.launcher.view.Card
 import org.lineageos.tv.launcher.view.FavoriteCard
 import java.util.Collections
-import java.util.LinkedHashSet
 
 
 class FavoritesAdapter(context: Context) : AppsAdapter(context) {
@@ -47,7 +43,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        (viewHolder.itemView as FavoriteCard).setAppInfo(mAppsList[i])
+        (viewHolder.itemView as FavoriteCard).setCardInfo(mAppsList[i])
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
