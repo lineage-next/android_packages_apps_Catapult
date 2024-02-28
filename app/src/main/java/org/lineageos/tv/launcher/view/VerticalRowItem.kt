@@ -1,15 +1,12 @@
 package org.lineageos.tv.launcher.view
 
 import android.content.Context
-import android.content.Intent
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.leanback.widget.HorizontalGridView
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.model.MainRowItem
 
 class VerticalRowItem : LinearLayout {

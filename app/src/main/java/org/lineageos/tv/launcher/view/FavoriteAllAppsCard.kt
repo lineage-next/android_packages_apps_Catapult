@@ -3,6 +3,7 @@ package org.lineageos.tv.launcher.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import org.lineageos.tv.launcher.R
 
 class FavoriteAllAppsCard : Card {
@@ -20,7 +21,7 @@ class FavoriteAllAppsCard : Card {
 
     init {
         inflate(context, R.layout.favorites_add_app_card, this)
-        background = context.getDrawable(R.drawable.favorites_app_card_background)
+        background = AppCompatResources.getDrawable(context, R.drawable.favorites_app_card_background)
         mActionIconView = findViewById(R.id.action_image)
     }
 
@@ -29,10 +30,10 @@ class FavoriteAllAppsCard : Card {
     }
 
     fun setActionAdd() {
-        mActionIconView.setImageDrawable(context.getDrawable(R.drawable.ic_add))
+        mActionIconView.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_add))
     }
 
     fun setActionRemove() {
-        mActionIconView.setImageDrawable(context.getDrawable(R.drawable.ic_remove))
+        mActionIconView.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_remove))
     }
 }

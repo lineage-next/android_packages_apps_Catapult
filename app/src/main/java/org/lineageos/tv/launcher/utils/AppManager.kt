@@ -30,9 +30,6 @@ object AppManager {
         return appsList
     }
 
-    fun removeFavoriteApp(context: Context, app: Launchable) {
-        removeFavoriteApp(context, app.mPackageName)
-    }
 
     fun removeFavoriteApp(context: Context, packageName: String) {
         val favoriteApps = getFavoriteApps(context)
@@ -43,12 +40,9 @@ object AppManager {
         mFavoritesChangeListener?.onFavoriteRemoved(packageName)
     }
 
-    fun addFavoriteApp(context: Context, app: Launchable) {
-        addFavoriteApp(context, app.mPackageName)
-    }
 
     fun addFavoriteApp(context: Context, packageName: String) {
-        val favoriteApps = getFavoriteApps(context) as ArrayList
+        val favoriteApps = getFavoriteApps(context)
         favoriteApps.add(packageName)
         setFavorites(context, favoriteApps)
 

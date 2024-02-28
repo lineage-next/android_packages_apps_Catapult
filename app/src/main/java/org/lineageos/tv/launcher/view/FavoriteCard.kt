@@ -5,10 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AppInfo
-import org.lineageos.tv.launcher.model.Launchable
 
 open class FavoriteCard : AppCard {
     private val mMoveOverlayView: ImageView by lazy { findViewById(R.id.app_move_handle) }

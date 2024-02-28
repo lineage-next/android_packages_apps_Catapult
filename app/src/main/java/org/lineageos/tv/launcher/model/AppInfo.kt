@@ -11,11 +11,6 @@ class AppInfo : Launchable {
     var mBanner: Drawable?
     private val mPackageManager: PackageManager = mContext.packageManager
 
-    constructor(label: String, packageName: String, icon: Drawable, context: Context) : super(
-        label, packageName, icon, context ) {
-        mBanner = null
-    }
-
     constructor(resolveInfo: ResolveInfo, context: Context) : super(
         resolveInfo.loadLabel(context.packageManager).toString(),
         resolveInfo.activityInfo.packageName,

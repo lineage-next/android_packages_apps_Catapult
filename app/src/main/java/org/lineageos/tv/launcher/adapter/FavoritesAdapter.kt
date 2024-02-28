@@ -122,7 +122,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         app.setMoveDone()
 
         // Save new favorites order
-        val newFavoritesSet = ArrayList<String>();
+        val newFavoritesSet = ArrayList<String>()
         for (a in mAppsList) {
             if (a.mPackageName != "") {
                 newFavoritesSet.add(a.mPackageName)
