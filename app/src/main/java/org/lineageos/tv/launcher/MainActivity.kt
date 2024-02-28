@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.leanback.widget.VerticalGridView
+import androidx.tvprovider.media.tv.PreviewChannel
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import org.lineageos.tv.launcher.adapter.AppsAdapter
@@ -16,10 +17,13 @@ import org.lineageos.tv.launcher.adapter.WatchNextAdapter
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
+import org.lineageos.tv.launcher.view.LargeImageButton
 
 
-class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
+class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestions.OnChannelChangeListener {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
+    private lateinit var mMainVerticalAdapter: MainVerticalAdapter
+    private lateinit var mChannels: List<PreviewChannel>
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,27 +34,35 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
             requestPermissions(arrayOf(TvContractCompat.PERMISSION_READ_TV_LISTINGS), 0)
         }
 
-        val mainItems = ArrayList<MainRowItem>()
+        val mainItems = ArrayList<Pair<Long, MainRowItem>>()
         mFavoritesAdapter = FavoritesAdapter(this)
-        mainItems.add(MainRowItem(getString(R.string.favorites), mFavoritesAdapter))
-        mainItems.add(MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this)))
+        mainItems.add(Pair(-1, MainRowItem(getString(R.string.favorites), mFavoritesAdapter)))
+        mainItems.add(Pair(-1, MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))))
 
-        val channels = Suggestions.getPreviewChannels(this)
-        for (channel in channels) {
+        mChannels = Suggestions.getPreviewChannels(this)
+        val hiddenChannels = Suggestions.getHiddenChannels(this)
+        for (channel in mChannels) {
+            if (channel.id in hiddenChannels) {
+                continue
+            }
+
             val previewPrograms = Suggestions.getSuggestion(this, channel.id).take(5)
             if (previewPrograms.isEmpty()) {
                 continue
             }
-            mainItems.add(MainRowItem(channel.displayName.toString(), ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)))
+            mainItems.add(Pair(channel.id,
+                MainRowItem(channel.displayName.toString(),
+                    ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
         }
 
-        mainItems.add(MainRowItem(getString(R.string.other_apps), AppsAdapter(this)))
+        mainItems.add(Pair(-1, MainRowItem(getString(R.string.other_apps), AppsAdapter(this))))
 
         val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
-        val mainVerticalAdapter = MainVerticalAdapter(this, mainItems)
-        mainVerticalGridView.adapter = mainVerticalAdapter
+        mMainVerticalAdapter = MainVerticalAdapter(this, mainItems)
+        mainVerticalGridView.adapter = mMainVerticalAdapter
 
         AppManager.setFavoritesListener(this)
+        Suggestions.setChannelListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -72,5 +84,28 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
 
     override fun onFavoriteRemoved(packageName: String) {
         mFavoritesAdapter.removeItem(packageName)
+    }
+
+    override fun onChannelHidden(channelId: Long) {
+        mMainVerticalAdapter.removeItem(channelId)
+    }
+
+    override fun onChannelShown(channelId: Long) {
+        var channel: PreviewChannel? = null
+        for (c in mChannels) {
+            if (c.id == channelId) {
+                channel = c
+            }
+        }
+
+        channel ?: return
+
+        val previewPrograms = Suggestions.getSuggestion(this, channel.id).take(5)
+        if (previewPrograms.isEmpty()) {
+            return
+        }
+
+        mMainVerticalAdapter.addItem(Pair(channel.id, MainRowItem(channel.displayName.toString(),
+            ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
     }
 }

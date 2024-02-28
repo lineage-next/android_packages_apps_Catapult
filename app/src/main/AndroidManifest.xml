@@ -38,5 +38,8 @@
         <activity
             android:name=".AddFavoriteActivity"
             android:theme="@style/Theme.TvTrebuchet.AddFavorite" />
+        <activity
+            android:name=".ModifyChannelsActivity"
+            android:theme="@style/Theme.TvTrebuchet.AddFavorite" />
     </application>
 </manifest>

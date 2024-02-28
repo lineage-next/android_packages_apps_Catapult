@@ -9,4 +9,6 @@
     <string name="move">Move</string>
     <string name="remove_favorite">Remove favorite</string>
     <string name="watch_next">Watch next</string>
+    <string name="modify_channels">Modify channels</string>
+    <string name="empty"></string>
 </resources>

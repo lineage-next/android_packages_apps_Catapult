@@ -1,13 +1,17 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import org.lineageos.tv.launcher.AddFavoriteActivity
+import org.lineageos.tv.launcher.ModifyChannelsActivity
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AddFavorite
+import org.lineageos.tv.launcher.model.ActivityLauncher
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
@@ -24,6 +28,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
     override fun getaAppsList(): ArrayList<Launchable> {
         val list = ArrayList<Launchable>()
         list.add(createAddFavoriteEntry())
+        list.add(createModifyChannelsEntry())
         return list
     }
 
@@ -33,7 +38,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             try {
                 val ai: ApplicationInfo = pm.getApplicationInfo(packageName, 0)
                 val appInfo = AppInfo(ai, mContext)
-                mAppsList.add(mAppsList.size - 1, appInfo)
+                mAppsList.add(mAppsList.size - STABLE_ITEM_COUNT, appInfo)
             } catch (e: PackageManager.NameNotFoundException) {
                 AppManager.removeFavoriteApp(mContext, packageName)
             }
@@ -51,9 +56,18 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     private fun createAddFavoriteEntry(): Launchable {
-        return AddFavorite(
+        return ActivityLauncher(
             mContext.getString(R.string.new_favorite),
-            mContext.getDrawable(R.drawable.ic_add)!!, mContext
+            AppCompatResources.getDrawable(mContext, R.drawable.ic_add)!!, mContext,
+            Intent(mContext, AddFavoriteActivity::class.java)
+        )
+    }
+
+    private fun createModifyChannelsEntry(): Launchable {
+        return ActivityLauncher(
+            mContext.getString(R.string.modify_channels),
+            AppCompatResources.getDrawable(mContext, R.drawable.ic_settings)!!, mContext,
+            Intent(mContext, ModifyChannelsActivity::class.java)
         )
     }
 
@@ -85,7 +99,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (v.mMoving) {
                     val i = findAppIndex(v.mPackageName)
-                    if (i == mAppsList.size - 2) {
+                    if (i == mAppsList.size - (STABLE_ITEM_COUNT + 1)) {
                         return true
                     }
                     Collections.swap(mAppsList, i, i + 1)
@@ -135,8 +149,8 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
     fun addItem(packageName: String) {
         val ai: ApplicationInfo = mContext.packageManager.getApplicationInfo(packageName, 0)
         val appInfo = AppInfo(ai, mContext)
-        mAppsList.add(mAppsList.size - 1, appInfo) // Take 'Add new' into account
-        notifyItemInserted(mAppsList.size - 2)
+        mAppsList.add(mAppsList.size - STABLE_ITEM_COUNT, appInfo) // Take 'Add new' into account
+        notifyItemInserted(mAppsList.size - (STABLE_ITEM_COUNT + 1))
     }
 
     fun removeItem(packageName: String) {
@@ -153,5 +167,9 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         }
 
         return -1
+    }
+
+    companion object {
+        private const val STABLE_ITEM_COUNT = 2
     }
 }

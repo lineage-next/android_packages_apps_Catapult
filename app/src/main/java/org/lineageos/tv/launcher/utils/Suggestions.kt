@@ -11,6 +11,11 @@ import androidx.tvprovider.media.tv.WatchNextProgram
 @SuppressLint("RestrictedApi")
 object Suggestions {
     private const val TAG = "TvLauncher.Suggestions"
+    private var mChannelChangeListener: OnChannelChangeListener? = null
+
+    fun setChannelListener(listener: OnChannelChangeListener) {
+        mChannelChangeListener = listener
+    }
 
     fun getWatchNextPrograms(context: Context): List<WatchNextProgram> {
         val cursor = context.contentResolver.query(
@@ -96,5 +101,48 @@ object Suggestions {
 
         cursor.close()
         return previewProgramList
+    }
+
+    fun setHiddenChannels(context: Context, hiddenChannels: ArrayList<Long>) {
+        val sharedPreferences = context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val serializedList = hiddenChannels.joinToString(",")
+        editor.putString("hiddenChannels", serializedList)
+        editor.apply()
+    }
+
+    fun getHiddenChannels(context: Context): ArrayList<Long> {
+        val sharedPreferences =
+            context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
+        val serializedList = sharedPreferences.getString("hiddenChannels", "") ?: ""
+        if (serializedList == "") {
+            return ArrayList()
+        }
+        return ArrayList(serializedList.split(",").map { it.toLong() })
+    }
+
+    fun hideChannel(context: Context, channelId: Long?) {
+        channelId ?: return
+        val hiddenChannels = getHiddenChannels(context)
+        hiddenChannels.add(channelId)
+        setHiddenChannels(context, hiddenChannels)
+
+        // Notify
+        mChannelChangeListener?.onChannelHidden(channelId)
+    }
+
+    fun showChannel(context: Context, channelId: Long?) {
+        channelId ?: return
+        val hiddenChannels = getHiddenChannels(context)
+        hiddenChannels.remove(channelId)
+        setHiddenChannels(context, hiddenChannels)
+
+        // Notify
+        mChannelChangeListener?.onChannelShown(channelId)
+    }
+
+    interface OnChannelChangeListener {
+        fun onChannelHidden(channelId: Long)
+        fun onChannelShown(channelId: Long)
     }
 }
