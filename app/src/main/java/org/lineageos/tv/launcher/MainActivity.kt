@@ -29,8 +29,6 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        AppManager.setFavoritesListener(this)
-
         val mainItems = ArrayList<MainRowItem>()
         mFavoritesAdapter = FavoritesAdapter(this)
         mainItems.add(MainRowItem(getString(R.string.favorites), mFavoritesAdapter))
@@ -50,6 +48,8 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
         val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
         val mainVerticalAdapter = MainVerticalAdapter(this, mainItems)
         mainVerticalGridView.adapter = mainVerticalAdapter
+
+        AppManager.setFavoritesListener(this)
 
         if (checkCallingOrSelfPermission(TvContractCompat.PERMISSION_READ_TV_LISTINGS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(arrayOf(TvContractCompat.PERMISSION_READ_TV_LISTINGS), 0)
