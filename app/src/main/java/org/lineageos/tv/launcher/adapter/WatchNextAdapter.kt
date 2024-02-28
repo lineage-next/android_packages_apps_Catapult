@@ -38,7 +38,7 @@ class WatchNextAdapter(private val mContext: Context) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        (viewHolder.itemView as WatchNextCard).setWatchNextInfo(mWatchableList[i])
+        (viewHolder.itemView as WatchNextCard).setInfo(mWatchableList[i])
     }
 
     override fun getItemCount(): Int {

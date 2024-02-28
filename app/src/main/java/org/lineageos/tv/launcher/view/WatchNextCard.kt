@@ -7,8 +7,10 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.tvprovider.media.tv.BaseProgram
+import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.WatchNextProgram
-import com.bumptech.glide.Glide
+import coil.load
 import org.lineageos.tv.launcher.R
 
 open class WatchNextCard : Card {
@@ -35,11 +37,15 @@ open class WatchNextCard : Card {
     }
 
     @SuppressLint("RestrictedApi")
-    fun setWatchNextInfo(info: WatchNextProgram) {
-        Glide.with(this).load(info.posterArtUri).into(mBannerView);
+    fun setInfo(info: BaseProgram) {
+        mBannerView.load(info.posterArtUri)
         mNameView.text = info.episodeTitle
-        mBannerView.visibility = View.VISIBLE
         mIconContainer.visibility = View.GONE
-        mLaunchIntent = info.intent
+        mBannerView.visibility = View.VISIBLE
+        if (info is WatchNextProgram) {
+            mLaunchIntent = info.intent
+        } else if (info is PreviewProgram) {
+            mLaunchIntent = info.intent
+        }
     }
 }

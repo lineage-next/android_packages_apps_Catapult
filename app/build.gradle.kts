@@ -53,5 +53,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.leanback:leanback:1.2.0-alpha04")
     implementation("androidx.tvprovider:tvprovider:1.0.0")
-    implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("io.coil-kt:coil:2.6.0")
 }

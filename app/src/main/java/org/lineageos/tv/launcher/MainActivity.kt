@@ -4,15 +4,21 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.util.Log
 import androidx.leanback.widget.VerticalGridView
+import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import org.lineageos.tv.launcher.adapter.AppsAdapter
+import org.lineageos.tv.launcher.adapter.ChannelAdapter
 import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
 import org.lineageos.tv.launcher.adapter.WatchNextAdapter
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
+import org.lineageos.tv.launcher.utils.Suggestions
 
 
 class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
@@ -29,6 +35,16 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener {
         mFavoritesAdapter = FavoritesAdapter(this)
         mainItems.add(MainRowItem(getString(R.string.favorites), mFavoritesAdapter))
         mainItems.add(MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this)))
+
+        val channels = Suggestions.getPreviewChannels(this)
+        for (channel in channels) {
+            val previewPrograms = Suggestions.getSuggestion(this, channel.id).take(5)
+            if (previewPrograms.isEmpty()) {
+                continue
+            }
+            mainItems.add(MainRowItem(channel.displayName.toString(), ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)))
+        }
+
         mainItems.add(MainRowItem(getString(R.string.other_apps), AppsAdapter(this)))
 
         val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
