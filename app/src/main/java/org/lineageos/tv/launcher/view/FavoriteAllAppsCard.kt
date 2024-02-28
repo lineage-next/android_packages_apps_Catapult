@@ -6,7 +6,7 @@ import android.widget.ImageView
 import org.lineageos.tv.launcher.R
 
 class FavoriteAllAppsCard : Card {
-    val mActionIconView: ImageView
+    private val mActionIconView: ImageView
 
     constructor(context: Context?) : super(context)
 
@@ -19,6 +19,7 @@ class FavoriteAllAppsCard : Card {
     )
 
     init {
+        inflate(context, R.layout.favorites_add_app_card, this)
         background = context.getDrawable(R.drawable.favorites_app_card_background)
         mActionIconView = findViewById(R.id.action_image)
     }

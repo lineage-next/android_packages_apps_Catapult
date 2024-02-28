@@ -9,7 +9,7 @@ import android.widget.TextView
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Launchable
 
-open class Card : LinearLayout {
+abstract class Card : LinearLayout {
     val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
     val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     var mPackageName: String = ""
@@ -27,6 +27,7 @@ open class Card : LinearLayout {
     )
 
     init {
+        // TODO: fix?
         inflate()
     }
 

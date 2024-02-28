@@ -14,8 +14,8 @@ import coil.load
 import org.lineageos.tv.launcher.R
 
 open class WatchNextCard : Card {
-    val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
-    val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
+    private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
+    private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
     constructor(context: Context?) : super(context)
 
@@ -30,10 +30,6 @@ open class WatchNextCard : Card {
     init {
         stateListAnimator =
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
-    }
-
-    override fun inflate() {
-        inflate(context, R.layout.app_card, this)
     }
 
     @SuppressLint("RestrictedApi")

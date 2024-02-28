@@ -15,6 +15,7 @@ import org.lineageos.tv.launcher.model.MainRowItem
 class VerticalRowItem : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
     private val mHorizontalGridView: HorizontalGridView by lazy { findViewById(R.id.horizontal_grid) }
+
     constructor(context: Context?) : super(context)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)

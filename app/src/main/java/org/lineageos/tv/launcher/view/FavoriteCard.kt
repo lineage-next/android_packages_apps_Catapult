@@ -11,7 +11,7 @@ import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
 open class FavoriteCard : AppCard {
-    val mMoveOverlayView: ImageView by lazy { findViewById(R.id.app_move_handle) }
+    private val mMoveOverlayView: ImageView by lazy { findViewById(R.id.app_move_handle) }
     var mMoving: Boolean = false
 
     constructor(context: Context?) : super(context)

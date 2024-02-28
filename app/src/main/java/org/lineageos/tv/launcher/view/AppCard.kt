@@ -11,8 +11,8 @@ import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
 open class AppCard : Card {
-    val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
-    val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
+    private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
+    private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
     constructor(context: Context?) : super(context)
 
