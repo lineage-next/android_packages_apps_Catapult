@@ -12,12 +12,10 @@ class AddFavoriteActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_favorite)
 
-        val window = window
         val layoutParams = window.attributes
         layoutParams.gravity = Gravity.END
-        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT // Set width as needed
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
         window.attributes = layoutParams
-
 
         val allAppsGridView: VerticalGridView = findViewById(R.id.all_apps_add_grid)
         val allAppsAdapter = AllAppsFavoritesAdapter(applicationContext)
