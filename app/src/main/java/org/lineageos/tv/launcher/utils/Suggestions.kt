@@ -77,7 +77,7 @@ object Suggestions {
         return previewChannelList
     }
 
-    fun getSuggestion(context: Context, id: Long): ArrayList<PreviewProgram> {
+    fun getSuggestions(context: Context, id: Long): ArrayList<PreviewProgram> {
         val cursor = context.contentResolver.query(
             TvContractCompat.buildPreviewProgramsUriForChannel(id),
             PreviewProgram.PROJECTION,

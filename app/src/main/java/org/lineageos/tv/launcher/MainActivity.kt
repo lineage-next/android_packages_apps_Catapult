@@ -17,7 +17,6 @@ import org.lineageos.tv.launcher.adapter.WatchNextAdapter
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
-import org.lineageos.tv.launcher.view.LargeImageButton
 
 
 class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestions.OnChannelChangeListener {
@@ -46,7 +45,7 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
                 continue
             }
 
-            val previewPrograms = Suggestions.getSuggestion(this, channel.id).take(5)
+            val previewPrograms = Suggestions.getSuggestions(this, channel.id).take(5)
             if (previewPrograms.isEmpty()) {
                 continue
             }
@@ -100,7 +99,7 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
 
         channel ?: return
 
-        val previewPrograms = Suggestions.getSuggestion(this, channel.id).take(5)
+        val previewPrograms = Suggestions.getSuggestions(this, channel.id).take(5)
         if (previewPrograms.isEmpty()) {
             return
         }
