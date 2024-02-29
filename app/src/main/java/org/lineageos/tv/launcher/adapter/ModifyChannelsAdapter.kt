@@ -68,6 +68,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                 return v.mMoving
             }
 
+            val pos = bindingAdapterPosition
             when (keyCode) {
                 KeyEvent.KEYCODE_BACK -> {
                     if (v.mMoving) {
@@ -78,28 +79,28 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                 }
                 KeyEvent.KEYCODE_DPAD_UP -> {
                     if (v.mMoving) {
-                        if (adapterPosition == 0) {
+                        if (pos == 0) {
                             return true
                         }
-                        Collections.swap(mChannels, adapterPosition, adapterPosition - 1)
-                        notifyItemMoved(adapterPosition, adapterPosition - 1)
+                        Collections.swap(mChannels, pos, pos - 1)
+                        notifyItemMoved(pos, pos - 1)
                         Suggestions.saveChannelOrder(
-                            mContext, adapterPosition + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 1,
-                            adapterPosition + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP,
+                            mContext, pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 1,
+                            pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP,
                             mChannels.map { it.id }, v.mChannelId !in hiddenChannels)
                         return true
                     }
                 }
                 KeyEvent.KEYCODE_DPAD_DOWN -> {
                     if (v.mMoving) {
-                        if (adapterPosition == mChannels.size - 1) {
+                        if (pos == mChannels.size - 1) {
                             return true
                         }
-                        Collections.swap(mChannels, adapterPosition, adapterPosition + 1)
-                        notifyItemMoved(adapterPosition, adapterPosition + 1)
+                        Collections.swap(mChannels, pos, pos + 1)
+                        notifyItemMoved(pos, pos + 1)
                         Suggestions.saveChannelOrder(
-                            mContext, adapterPosition + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP - 1,
-                            adapterPosition + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 0,
+                            mContext, pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP - 1,
+                            pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 0,
                             mChannels.map { it.id }, v.mChannelId !in hiddenChannels)
                         return true
                     }

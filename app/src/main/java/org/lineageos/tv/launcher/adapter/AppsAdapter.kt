@@ -37,7 +37,7 @@ open class AppsAdapter(protected val mContext: Context) :
         }
 
         override fun onKey(v: View, keyCode: Int, keyEvent: KeyEvent): Boolean {
-            return handleKey(v, keyCode, keyEvent, adapterPosition)
+            return handleKey(v, keyCode, keyEvent, bindingAdapterPosition)
         }
     }
 
