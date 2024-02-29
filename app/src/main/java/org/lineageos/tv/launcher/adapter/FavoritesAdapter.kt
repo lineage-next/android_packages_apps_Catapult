@@ -78,7 +78,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         )
     }
 
-    override fun handleKey(v: View, keyCode: Int, keyEvent: KeyEvent): Boolean {
+    override fun handleKey(v: View, keyCode: Int, keyEvent: KeyEvent, adapterPosition: Int): Boolean {
         v as FavoriteCard
 
         // Leave center key for onClick handler
@@ -101,23 +101,21 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (v.mMoving) {
-                    val i = findAppIndex(v.mPackageName)
-                    if (i == 0) {
+                    if (adapterPosition == 0) {
                         return true
                     }
-                    Collections.swap(mAppsList, i, i - 1)
-                    notifyItemMoved(i, i - 1)
+                    Collections.swap(mAppsList, adapterPosition, adapterPosition - 1)
+                    notifyItemMoved(adapterPosition, adapterPosition - 1)
                     return true
                 }
             }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (v.mMoving) {
-                    val i = findAppIndex(v.mPackageName)
-                    if (i == mAppsList.size - (STABLE_ITEM_COUNT + 1)) {
+                    if (adapterPosition == mAppsList.size - (STABLE_ITEM_COUNT + 1)) {
                         return true
                     }
-                    Collections.swap(mAppsList, i, i + 1)
-                    notifyItemMoved(i, i + 1)
+                    Collections.swap(mAppsList, adapterPosition, adapterPosition + 1)
+                    notifyItemMoved(adapterPosition, adapterPosition + 1)
                     return true
                 }
             }
