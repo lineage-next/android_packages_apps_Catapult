@@ -40,4 +40,8 @@ class MainVerticalAdapter(private val mContext: Context,
         mRowList.add(mRowList.size - 1, item)
         notifyItemInserted(mRowList.size - 2)
     }
+
+    companion object {
+        const val STABLE_ITEM_COUNT_TOP = 2
+    }
 }

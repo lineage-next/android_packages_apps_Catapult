@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_channels_guide"
+        android:drawableStart="@drawable/ic_info"
+        android:drawablePadding="12dp"
+        android:padding="20dp"
+        tools:ignore="UseCompatTextViewDrawableXml" />
 
     <androidx.leanback.widget.VerticalGridView
         android:id="@+id/modify_channels_grid"

@@ -18,6 +18,7 @@ import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.getAppName
+import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 
 
 class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestions.OnChannelChangeListener {
@@ -39,8 +40,9 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
         mainItems.add(Pair(-1, MainRowItem(getString(R.string.favorites), mFavoritesAdapter)))
         mainItems.add(Pair(-1, MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))))
 
-        mChannels = Suggestions.getPreviewChannels(this)
+        val channelOrder = Suggestions.getChannelOrder(this)
         val hiddenChannels = Suggestions.getHiddenChannels(this)
+        mChannels = Suggestions.getPreviewChannels(this).orderSuggestions(channelOrder) { it.id }
         for (channel in mChannels) {
             if (channel.id in hiddenChannels) {
                 continue
@@ -108,5 +110,9 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
 
         mMainVerticalAdapter.addItem(Pair(channel.id, MainRowItem(channel.displayName.toString(),
             ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
+    }
+
+    override fun onChannelOrderChanged(from: Int, to: Int) {
+        mMainVerticalAdapter.notifyItemMoved(from, to)
     }
 }

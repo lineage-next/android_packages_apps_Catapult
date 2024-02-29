@@ -3,7 +3,6 @@ package org.lineageos.tv.launcher.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.media.tv.TvContract
 import android.util.Log
 import androidx.tvprovider.media.tv.PreviewChannel
@@ -159,6 +158,38 @@ object Suggestions {
         mChannelChangeListener?.onChannelShown(channelId)
     }
 
+    fun saveChannelOrder(context: Context, from: Int, to: Int, channels: List<Long>, notify: Boolean) {
+        val sharedPreferences = context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val serializedList = channels.joinToString(",")
+        editor.putString("channels", serializedList)
+        editor.apply()
+
+        if (!notify) {
+            return
+        }
+
+        // Notify
+        mChannelChangeListener?.onChannelOrderChanged(from, to)
+    }
+
+    fun getChannelOrder(context: Context): ArrayList<Long> {
+        val sharedPreferences =
+            context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
+        val serializedList = sharedPreferences.getString("channels", "") ?: ""
+        if (serializedList == "") {
+            return ArrayList()
+        }
+
+        return ArrayList(serializedList.split(",").map { it.toLong() })
+    }
+
+    fun <T, K> List<T>.orderSuggestions(orderIds: List<K>, idSelector: (T) -> K?): List<T> {
+        val (presentItems, remainingItems) = this.partition { idSelector(it) in orderIds }
+        val sortedPresentItems = presentItems.sortedBy { orderIds.indexOf(idSelector(it)) }
+        return sortedPresentItems + remainingItems
+    }
+
     fun aspectRatioToFloat(aspectRatio: Int): Float {
         return when (aspectRatio) {
             TvContract.PreviewPrograms.ASPECT_RATIO_16_9 -> 16f / 9f
@@ -183,5 +214,6 @@ object Suggestions {
     interface OnChannelChangeListener {
         fun onChannelHidden(channelId: Long)
         fun onChannelShown(channelId: Long)
+        fun onChannelOrderChanged(from: Int, to: Int)
     }
 }

@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.leanback.widget.VerticalGridView
 import org.lineageos.tv.launcher.adapter.ModifyChannelsAdapter
 import org.lineageos.tv.launcher.utils.Suggestions
+import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 
 class ModifyChannelsActivity: Activity() {
 
@@ -15,7 +16,9 @@ class ModifyChannelsActivity: Activity() {
         setContentView(R.layout.activity_modify_channels)
 
         val channelsGrid: VerticalGridView = findViewById(R.id.modify_channels_grid)
-        channelsGrid.adapter = ModifyChannelsAdapter(this, Suggestions.getPreviewChannels(this))
+        val channelOrder = Suggestions.getChannelOrder(this)
+        val channels = Suggestions.getPreviewChannels(this).orderSuggestions(channelOrder) { it.id }
+        channelsGrid.adapter = ModifyChannelsAdapter(this, channels)
 
         val layoutParams = window.attributes
         layoutParams.gravity = Gravity.END

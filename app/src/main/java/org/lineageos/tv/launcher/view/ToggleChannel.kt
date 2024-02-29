@@ -14,6 +14,7 @@ class ToggleChannel : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
     private val mSwitch: Switch by lazy { findViewById(R.id.state_switch) }
 
+    var mMoving = false
     var mChannelId: Long? = null
 
     constructor(context: Context) : super(context)
@@ -38,5 +39,13 @@ class ToggleChannel : LinearLayout {
             R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
         mChannelId = previewChannel.id
         mSwitch.isChecked = !hidden
+    }
+
+    fun setMoving() {
+        mMoving = true
+    }
+
+    fun setMoveDone() {
+        mMoving = false
     }
 }
