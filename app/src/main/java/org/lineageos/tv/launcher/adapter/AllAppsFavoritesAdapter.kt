@@ -37,6 +37,13 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(FavoriteAllAppsCard(mContext))
+        val itemView = FavoriteAllAppsCard(parent.context)
+
+        itemView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(itemView)
     }
 }

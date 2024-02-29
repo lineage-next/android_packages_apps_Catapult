@@ -42,6 +42,13 @@ class ChannelAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(WatchNextCard(mContext))
+        val itemView = WatchNextCard(parent.context)
+
+        itemView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(itemView)
     }
 }

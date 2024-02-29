@@ -7,11 +7,10 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.tvprovider.media.tv.BaseProgram
-import androidx.tvprovider.media.tv.PreviewProgram
-import androidx.tvprovider.media.tv.WatchNextProgram
+import androidx.tvprovider.media.tv.BasePreviewProgram
 import coil.load
 import org.lineageos.tv.launcher.R
+
 
 open class WatchNextCard : Card {
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
@@ -32,16 +31,20 @@ open class WatchNextCard : Card {
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
     }
 
+    override fun inflate() {
+        inflate(context, R.layout.watch_next_card, this)
+    }
+
     @SuppressLint("RestrictedApi")
-    fun setInfo(info: BaseProgram) {
-        mBannerView.load(info.posterArtUri)
+    fun setInfo(info: BasePreviewProgram) {
         mNameView.text = info.episodeTitle
+        mLabel = info.title
         mIconContainer.visibility = View.GONE
         mBannerView.visibility = View.VISIBLE
-        if (info is WatchNextProgram) {
-            mLaunchIntent = info.intent
-        } else if (info is PreviewProgram) {
-            mLaunchIntent = info.intent
+        mLaunchIntent = info.intent
+
+        mBannerView.load(info.posterArtUri) {
+            crossfade(750)
         }
     }
 }

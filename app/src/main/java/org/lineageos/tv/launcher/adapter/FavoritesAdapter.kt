@@ -52,7 +52,14 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(FavoriteCard(mContext))
+        val itemView = FavoriteCard(parent.context)
+
+        itemView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(itemView)
     }
 
     private fun createAddFavoriteEntry(): Launchable {

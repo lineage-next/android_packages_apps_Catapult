@@ -69,7 +69,14 @@ open class AppsAdapter(protected val mContext: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(AppCard(mContext))
+        val itemView = AppCard(parent.context)
+
+        itemView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(itemView)
     }
 
     protected fun showPopupMenu(anchorView: View, menuResId: Int) {

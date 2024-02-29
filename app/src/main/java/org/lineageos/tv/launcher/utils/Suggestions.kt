@@ -2,6 +2,7 @@ package org.lineageos.tv.launcher.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.tv.TvContract
 import android.util.Log
 import androidx.tvprovider.media.tv.PreviewChannel
 import androidx.tvprovider.media.tv.PreviewProgram
@@ -139,6 +140,17 @@ object Suggestions {
 
         // Notify
         mChannelChangeListener?.onChannelShown(channelId)
+    }
+
+    fun aspectRatioToFloat(aspectRatio: Int): Float {
+        return when (aspectRatio) {
+            TvContract.PreviewPrograms.ASPECT_RATIO_16_9 -> 16f / 9f
+            TvContract.PreviewPrograms.ASPECT_RATIO_4_3 -> 4f / 3f
+            TvContract.PreviewPrograms.ASPECT_RATIO_1_1 -> 1f
+            TvContract.PreviewPrograms.ASPECT_RATIO_3_2 -> 3f / 2f
+            TvContract.PreviewPrograms.ASPECT_RATIO_2_3 -> 2f / 3f
+            else -> -1f
+        }
     }
 
     interface OnChannelChangeListener {

@@ -52,6 +52,13 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ToggleChannel(mContext))
+        val itemView = ToggleChannel(parent.context)
+
+        itemView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        return ViewHolder(itemView)
     }
 }
