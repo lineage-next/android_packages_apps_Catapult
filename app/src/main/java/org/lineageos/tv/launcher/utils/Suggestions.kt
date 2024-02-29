@@ -12,6 +12,7 @@ import androidx.tvprovider.media.tv.WatchNextProgram
 @SuppressLint("RestrictedApi")
 object Suggestions {
     private const val TAG = "TvLauncher.Suggestions"
+    private const val PACKAGE_FRAMEWORK_STUBS = "com.android.tv.frameworkpackagestubs"
     private var mChannelChangeListener: OnChannelChangeListener? = null
 
     fun setChannelListener(listener: OnChannelChangeListener) {
@@ -35,7 +36,14 @@ object Suggestions {
 
         while (cursor.moveToNext()) {
             try {
-                watchNextList.add(WatchNextProgram.fromCursor(cursor))
+                val watchNextProgram = WatchNextProgram.fromCursor(cursor)
+                val resolvedActivity = watchNextProgram.intent.resolveActivity(context.packageManager)
+                if (resolvedActivity == null ||
+                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS) {
+                    // This can't be opened with any app
+                    continue
+                }
+                watchNextList.add(watchNextProgram)
             } catch (e: Exception) {
                 Log.w(TAG, "Ignoring watch next: $e")
             }
@@ -82,7 +90,7 @@ object Suggestions {
             TvContractCompat.buildPreviewProgramsUriForChannel(id),
             PreviewProgram.PROJECTION,
             null,
-            arrayOf("LIMIT 5"),
+            null,
             null,
         ) ?: return ArrayList()
 
@@ -94,7 +102,14 @@ object Suggestions {
 
         while (cursor.moveToNext()) {
             try {
-                previewProgramList.add(PreviewProgram.fromCursor(cursor))
+                val previewProgram = PreviewProgram.fromCursor(cursor)
+                val resolvedActivity = previewProgram.intent.resolveActivity(context.packageManager)
+                if (resolvedActivity == null ||
+                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS) {
+                    // This can't be opened with any app
+                    continue
+                }
+                previewProgramList.add(previewProgram)
             } catch (e: Exception) {
                 Log.w(TAG, "Ignoring preview program: $e")
             }
