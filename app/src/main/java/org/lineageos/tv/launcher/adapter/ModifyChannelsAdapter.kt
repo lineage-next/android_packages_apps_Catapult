@@ -69,6 +69,13 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
             }
 
             when (keyCode) {
+                KeyEvent.KEYCODE_BACK -> {
+                    if (v.mMoving) {
+                        v.setMoveDone()
+                        return true
+                    }
+                    return false
+                }
                 KeyEvent.KEYCODE_DPAD_UP -> {
                     if (v.mMoving) {
                         if (adapterPosition == 0) {

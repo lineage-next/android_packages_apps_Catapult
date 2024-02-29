@@ -92,6 +92,13 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         }
 
         when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> {
+                if (v.mMoving) {
+                    v.setMoveDone()
+                    return true
+                }
+                return false
+            }
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (v.mMoving) {
                     val i = findAppIndex(v.mPackageName)
