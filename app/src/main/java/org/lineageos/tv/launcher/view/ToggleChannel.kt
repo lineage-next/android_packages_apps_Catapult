@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.tvprovider.media.tv.PreviewChannel
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 
 class ToggleChannel : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
@@ -33,7 +34,8 @@ class ToggleChannel : LinearLayout {
     }
 
     fun setData(previewChannel: PreviewChannel, hidden: Boolean) {
-        mTitleView.text = previewChannel.displayName
+        mTitleView.text = resources.getString(
+            R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
         mChannelId = previewChannel.id
         mSwitch.isChecked = !hidden
     }

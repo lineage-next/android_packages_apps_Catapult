@@ -2,6 +2,8 @@ package org.lineageos.tv.launcher.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.media.tv.TvContract
 import android.util.Log
 import androidx.tvprovider.media.tv.PreviewChannel
@@ -165,6 +167,16 @@ object Suggestions {
             TvContract.PreviewPrograms.ASPECT_RATIO_3_2 -> 3f / 2f
             TvContract.PreviewPrograms.ASPECT_RATIO_2_3 -> 2f / 3f
             else -> -1f
+        }
+    }
+
+    fun PreviewChannel.getAppName(context: Context): String {
+        val packageManager: PackageManager = context.packageManager
+        return try {
+            val applicationInfo = packageManager.getApplicationInfo(this.packageName, 0)
+            packageManager.getApplicationLabel(applicationInfo).toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            ""
         }
     }
 

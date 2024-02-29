@@ -17,6 +17,7 @@ import org.lineageos.tv.launcher.adapter.WatchNextAdapter
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
+import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 
 
 class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestions.OnChannelChangeListener {
@@ -50,7 +51,8 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
                 continue
             }
             mainItems.add(Pair(channel.id,
-                MainRowItem(channel.displayName.toString(),
+                MainRowItem(resources.getString(
+                    R.string.channel_title, channel.getAppName(this), channel.displayName),
                     ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
         }
 
