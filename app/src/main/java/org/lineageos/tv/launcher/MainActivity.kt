@@ -21,7 +21,7 @@ import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 
 
-class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestions.OnChannelChangeListener {
+class MainActivity : Activity() {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
     private lateinit var mMainVerticalAdapter: MainVerticalAdapter
     private lateinit var mChannels: List<PreviewChannel>
@@ -64,8 +64,12 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
         mMainVerticalAdapter = MainVerticalAdapter(this, mainItems)
         mainVerticalGridView.adapter = mMainVerticalAdapter
 
-        AppManager.setFavoritesListener(this)
-        Suggestions.setChannelListener(this)
+        AppManager.onFavoriteAddedCallback = ::onFavoriteAdded
+        AppManager.onFavoriteRemovedCallback = ::onFavoriteRemoved
+
+        Suggestions.onChannelHiddenCallback = ::onChannelHidden
+        Suggestions.onChannelShownCallback = ::onChannelShown
+        Suggestions.onChannelOrderChangedCallback = ::onChannelOrderChanged
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -81,19 +85,19 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
         const val REQUEST_CODE_UNINSTALL = 1
     }
 
-    override fun onFavoriteAdded(packageName: String) {
+    private fun onFavoriteAdded(packageName: String) {
         mFavoritesAdapter.addItem(packageName)
     }
 
-    override fun onFavoriteRemoved(packageName: String) {
+    private fun onFavoriteRemoved(packageName: String) {
         mFavoritesAdapter.removeItem(packageName)
     }
 
-    override fun onChannelHidden(channelId: Long) {
+    private fun onChannelHidden(channelId: Long) {
         mMainVerticalAdapter.removeItem(channelId)
     }
 
-    override fun onChannelShown(channelId: Long) {
+    private fun onChannelShown(channelId: Long) {
         var channel: PreviewChannel? = null
         for (c in mChannels) {
             if (c.id == channelId) {
@@ -112,7 +116,7 @@ class MainActivity : Activity(), AppManager.OnFavoritesChangeListener, Suggestio
             ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
     }
 
-    override fun onChannelOrderChanged(from: Int, to: Int) {
+    private fun onChannelOrderChanged(from: Int, to: Int) {
         mMainVerticalAdapter.notifyItemMoved(from, to)
     }
 }

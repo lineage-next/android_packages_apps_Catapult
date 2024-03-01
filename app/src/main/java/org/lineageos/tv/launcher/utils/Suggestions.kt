@@ -14,11 +14,10 @@ import androidx.tvprovider.media.tv.WatchNextProgram
 object Suggestions {
     private const val TAG = "TvLauncher.Suggestions"
     private const val PACKAGE_FRAMEWORK_STUBS = "com.android.tv.frameworkpackagestubs"
-    private var mChannelChangeListener: OnChannelChangeListener? = null
 
-    fun setChannelListener(listener: OnChannelChangeListener) {
-        mChannelChangeListener = listener
-    }
+    internal var onChannelHiddenCallback: (channelId: Long) -> Unit = {}
+    internal var onChannelShownCallback: (channelId: Long) -> Unit = {}
+    internal var onChannelOrderChangedCallback: (from: Int, to: Int) -> Unit = { _, _ -> }
 
     fun getWatchNextPrograms(context: Context): List<WatchNextProgram> {
         val cursor = context.contentResolver.query(
@@ -145,7 +144,7 @@ object Suggestions {
         setHiddenChannels(context, hiddenChannels)
 
         // Notify
-        mChannelChangeListener?.onChannelHidden(channelId)
+        onChannelHiddenCallback(channelId)
     }
 
     fun showChannel(context: Context, channelId: Long?) {
@@ -155,7 +154,7 @@ object Suggestions {
         setHiddenChannels(context, hiddenChannels)
 
         // Notify
-        mChannelChangeListener?.onChannelShown(channelId)
+        onChannelShownCallback(channelId)
     }
 
     fun saveChannelOrder(context: Context, from: Int, to: Int, channels: List<Long>, notify: Boolean) {
@@ -170,7 +169,7 @@ object Suggestions {
         }
 
         // Notify
-        mChannelChangeListener?.onChannelOrderChanged(from, to)
+        onChannelOrderChangedCallback(from, to)
     }
 
     fun getChannelOrder(context: Context): ArrayList<Long> {
@@ -209,11 +208,5 @@ object Suggestions {
         } catch (e: PackageManager.NameNotFoundException) {
             ""
         }
-    }
-
-    interface OnChannelChangeListener {
-        fun onChannelHidden(channelId: Long)
-        fun onChannelShown(channelId: Long)
-        fun onChannelOrderChanged(from: Int, to: Int)
     }
 }

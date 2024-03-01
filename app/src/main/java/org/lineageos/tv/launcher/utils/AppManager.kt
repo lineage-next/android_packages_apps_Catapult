@@ -10,11 +10,8 @@ import org.lineageos.tv.launcher.model.Launchable
 
 
 object AppManager {
-    private var mFavoritesChangeListener: OnFavoritesChangeListener? = null
-
-    fun setFavoritesListener(listener: OnFavoritesChangeListener) {
-        mFavoritesChangeListener = listener
-    }
+    internal var onFavoriteAddedCallback: (packageName: String) -> Unit = {}
+    internal var onFavoriteRemovedCallback: (packageName: String) -> Unit = {}
 
     fun getInstalledApps(context: Context): ArrayList<Launchable> {
         val pm = context.packageManager
@@ -30,14 +27,13 @@ object AppManager {
         return appsList
     }
 
-
     fun removeFavoriteApp(context: Context, packageName: String) {
         val favoriteApps = getFavoriteApps(context)
         favoriteApps.remove(packageName)
         setFavorites(context, favoriteApps)
 
         // Notify
-        mFavoritesChangeListener?.onFavoriteRemoved(packageName)
+        onFavoriteRemovedCallback(packageName)
     }
 
 
@@ -47,7 +43,7 @@ object AppManager {
         setFavorites(context, favoriteApps)
 
         // Notify
-        mFavoritesChangeListener?.onFavoriteAdded(packageName)
+        onFavoriteAddedCallback(packageName)
     }
 
     fun getFavoriteApps(context: Context): ArrayList<String> {
@@ -72,10 +68,5 @@ object AppManager {
         val packageUri = Uri.parse("package:$packageName")
         val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
         (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
-    }
-
-    interface OnFavoritesChangeListener {
-        fun onFavoriteAdded(packageName: String)
-        fun onFavoriteRemoved(packageName: String)
     }
 }
