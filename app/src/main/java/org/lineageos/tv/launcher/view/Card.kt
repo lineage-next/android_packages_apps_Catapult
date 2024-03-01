@@ -15,6 +15,7 @@ abstract class Card : LinearLayout {
     var mPackageName: String = ""
     var mLabel: String = ""
     var mLaunchIntent: Intent? = null
+    var mHasMenu: Boolean = true
 
     constructor(context: Context?) : super(context)
 
@@ -41,5 +42,6 @@ abstract class Card : LinearLayout {
         mLabel = appInfo.mLabel
         mPackageName = appInfo.mPackageName
         mLaunchIntent = appInfo.mLaunchIntent
+        mHasMenu = appInfo.mHasMenu
     }
 }

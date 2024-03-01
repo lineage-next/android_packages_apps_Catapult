@@ -130,7 +130,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
 
     override fun handleLongClick(app: Card): Boolean {
         app as FavoriteCard
-        if (app.mMoving) {
+        if (app.mMoving || !app.mHasMenu) {
             return true
         }
 
