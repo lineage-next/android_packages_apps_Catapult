@@ -18,7 +18,8 @@ object Suggestions {
 
     internal var onChannelHiddenCallback: (channelId: Long) -> Unit = {}
     internal var onChannelShownCallback: (channelId: Long) -> Unit = {}
-    internal var onChannelOrderChangedCallback: (from: Int, to: Int) -> Unit = { _, _ -> }
+    internal var onChannelSelectedCallback: (channelId: Long, index: Int) -> Unit = { _, _ -> }
+    internal var onChannelOrderChangedCallback: (moveChannelId: Long?, otherChannelId: Long?) -> Unit = { _, _, -> }
 
     fun getWatchNextPrograms(context: Context): List<WatchNextProgram> {
         val cursor = context.contentResolver.query(
@@ -163,7 +164,13 @@ object Suggestions {
             R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
     }
 
-    fun saveChannelOrder(context: Context, from: Int, to: Int, channels: List<Long>, notify: Boolean) {
+    fun saveChannelOrder(
+        context: Context,
+        from: Int,
+        to: Int,
+        channels: List<Long>,
+        notify: Boolean
+    ) {
         val sharedPreferences = context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         val serializedList = channels.joinToString(",")
@@ -175,7 +182,7 @@ object Suggestions {
         }
 
         // Notify
-        onChannelOrderChangedCallback(from, to)
+        onChannelOrderChangedCallback(channels[from], channels[to])
     }
 
     fun getChannelOrder(context: Context): ArrayList<Long> {

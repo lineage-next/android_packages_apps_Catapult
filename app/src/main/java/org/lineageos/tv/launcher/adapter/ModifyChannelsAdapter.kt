@@ -56,6 +56,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         override fun onLongClick(v: View): Boolean {
             v as ToggleChannel
             v.setMoving()
+            v.mChannelId?.let { Suggestions.onChannelSelectedCallback(it, bindingAdapterPosition) }
             return true
         }
 
@@ -89,9 +90,9 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                         Collections.swap(mChannels, pos, pos - 1)
                         notifyItemMoved(pos, pos - 1)
                         Suggestions.saveChannelOrder(
-                            mContext, pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 1,
-                            pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP,
-                            mChannels.map { it.id }, v.mChannelId !in hiddenChannels)
+                            mContext, pos, pos - 1, mChannels.map { it.id },
+                            v.mChannelId !in hiddenChannels
+                        )
                         return true
                     }
                 }
@@ -103,9 +104,9 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                         Collections.swap(mChannels, pos, pos + 1)
                         notifyItemMoved(pos, pos + 1)
                         Suggestions.saveChannelOrder(
-                            mContext, pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP - 1,
-                            pos + MainVerticalAdapter.STABLE_ITEM_COUNT_TOP + 0,
-                            mChannels.map { it.id }, v.mChannelId !in hiddenChannels)
+                            mContext, pos, pos + 1, mChannels.map { it.id },
+                            v.mChannelId !in hiddenChannels
+                        )
                         return true
                     }
                 }

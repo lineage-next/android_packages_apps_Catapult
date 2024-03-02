@@ -26,6 +26,7 @@ class MainActivity : Activity() {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
     private lateinit var mMainVerticalAdapter: MainVerticalAdapter
     private lateinit var mChannels: List<PreviewChannel>
+    private lateinit var mMainVerticalGridView: VerticalGridView
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +81,11 @@ class MainActivity : Activity() {
             )
         }
 
-        val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
+        mMainVerticalGridView = findViewById(R.id.main_vertical_grid)
         mMainVerticalAdapter = MainVerticalAdapter(this,
             mainItems.orderSuggestions(Suggestions.getChannelOrder(this)) { it.first } as ArrayList)
 
-        mainVerticalGridView.adapter = mMainVerticalAdapter
+        mMainVerticalGridView.adapter = mMainVerticalAdapter
 
         AppManager.onFavoriteAddedCallback = ::onFavoriteAdded
         AppManager.onFavoriteRemovedCallback = ::onFavoriteRemoved
@@ -92,6 +93,7 @@ class MainActivity : Activity() {
         Suggestions.onChannelHiddenCallback = ::onChannelHidden
         Suggestions.onChannelShownCallback = ::onChannelShown
         Suggestions.onChannelOrderChangedCallback = ::onChannelOrderChanged
+        Suggestions.onChannelSelectedCallback = ::onChannelSelected
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -156,7 +158,22 @@ class MainActivity : Activity() {
             ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
     }
 
-    private fun onChannelOrderChanged(from: Int, to: Int) {
-        mMainVerticalAdapter.notifyItemMoved(from, to)
+    private fun onChannelOrderChanged(moveChannelId: Long?, otherChannelId: Long?) {
+        val isMovingChannelShowing = mMainVerticalAdapter.isChannelShowing(moveChannelId)
+        val isOtherChannelShowing = mMainVerticalAdapter.isChannelShowing(otherChannelId)
+        if (!isMovingChannelShowing || !isOtherChannelShowing) {
+            return
+        }
+
+        val from = mMainVerticalAdapter.findChannelIndex(moveChannelId)
+        val to = mMainVerticalAdapter.findChannelIndex(otherChannelId)
+        mMainVerticalAdapter.itemMoved(from, to)
+    }
+
+    private fun onChannelSelected(channelId: Long, index: Int) {
+        if (mMainVerticalAdapter.isChannelShowing(channelId)) {
+            val pos = mMainVerticalAdapter.findChannelIndex(channelId)
+            mMainVerticalGridView.layoutManager?.scrollToPosition(pos)
+        }
     }
 }

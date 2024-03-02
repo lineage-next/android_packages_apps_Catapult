@@ -1,6 +1,7 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +9,7 @@ import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 import org.lineageos.tv.launcher.view.VerticalRowItem
+import java.util.Collections
 
 class MainVerticalAdapter(private val mContext: Context,
                           private val mRowList: ArrayList<Pair<Long, MainRowItem>>) :
@@ -47,7 +49,20 @@ class MainVerticalAdapter(private val mContext: Context,
         notifyItemInserted(index)
     }
 
-    companion object {
-        const val STABLE_ITEM_COUNT_TOP = 2
+    fun isChannelShowing(channelId: Long?): Boolean {
+        channelId ?: return false
+        val res = mRowList.find { it.first == channelId }
+        res ?: return false
+        return true
+    }
+
+    fun findChannelIndex(channelId: Long?): Int {
+        channelId ?: return -1
+        return  mRowList.indexOfFirst { it.first == channelId }
+    }
+
+    fun itemMoved(from: Int, to: Int) {
+        Collections.swap(mRowList, from, to)
+        notifyItemMoved(from, to)
     }
 }
