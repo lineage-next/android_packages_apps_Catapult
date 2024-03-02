@@ -6,11 +6,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
 open class AppCard : Card {
+    val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
+    val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
@@ -35,6 +38,9 @@ open class AppCard : Card {
 
     override fun setCardInfo(appInfo: Launchable) {
         super.setCardInfo(appInfo)
+
+        mNameView.text = appInfo.mLabel
+        mIconView.setImageDrawable(appInfo.mIcon)
 
         if (appInfo is AppInfo && appInfo.mBanner != null) {
             // App with a banner

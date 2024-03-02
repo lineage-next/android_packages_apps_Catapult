@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:maxWidth="@dimen/card_width"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/card_height"
@@ -23,30 +24,5 @@
             android:clipToOutline="true"
             android:visibility="gone" />
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/app_with_icon"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="6dp"
-        android:paddingEnd="12dp"
-        android:paddingStart="12dp"
-        android:paddingTop="10dp">
-
-        <ImageView
-            android:id="@+id/app_icon"
-            android:layout_width="52dp"
-            android:layout_height="52dp" />
-
-        <TextView
-            android:id="@+id/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:textColor="@android:color/black" />
-
-    </LinearLayout>
 
 </LinearLayout>

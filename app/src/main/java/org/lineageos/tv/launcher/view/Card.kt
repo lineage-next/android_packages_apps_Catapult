@@ -10,8 +10,6 @@ import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Launchable
 
 abstract class Card : LinearLayout {
-    val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
-    val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     var mPackageName: String = ""
     var mLabel: String = ""
     var mLaunchIntent: Intent? = null
@@ -37,8 +35,6 @@ abstract class Card : LinearLayout {
     }
 
     open fun setCardInfo(appInfo: Launchable) {
-        mNameView.text = appInfo.mLabel
-        mIconView.setImageDrawable(appInfo.mIcon)
         mLabel = appInfo.mLabel
         mPackageName = appInfo.mPackageName
         mLaunchIntent = appInfo.mLaunchIntent

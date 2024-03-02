@@ -2,11 +2,17 @@ package org.lineageos.tv.launcher.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.AppInfo
+import org.lineageos.tv.launcher.model.Launchable
 
 class FavoriteAllAppsCard : Card {
+    val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
+    val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mActionIconView: ImageView
 
     constructor(context: Context?) : super(context)
@@ -41,5 +47,12 @@ class FavoriteAllAppsCard : Card {
                 R.drawable.ic_remove
             )
         )
+    }
+
+    override fun setCardInfo(appInfo: Launchable) {
+        super.setCardInfo(appInfo)
+
+        mNameView.text = appInfo.mLabel
+        mIconView.setImageDrawable(appInfo.mIcon)
     }
 }

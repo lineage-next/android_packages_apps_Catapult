@@ -6,7 +6,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.tvprovider.media.tv.BasePreviewProgram
 import coil.load
 import org.lineageos.tv.launcher.R
@@ -14,7 +14,6 @@ import org.lineageos.tv.launcher.R
 
 open class WatchNextCard : Card {
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
-    private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
 
     constructor(context: Context?) : super(context)
 
@@ -37,9 +36,7 @@ open class WatchNextCard : Card {
 
     @SuppressLint("RestrictedApi")
     fun setInfo(info: BasePreviewProgram) {
-        mNameView.text = info.episodeTitle
         mLabel = info.title
-        mIconContainer.visibility = View.GONE
         mBannerView.visibility = View.VISIBLE
         mLaunchIntent = info.intent
 
