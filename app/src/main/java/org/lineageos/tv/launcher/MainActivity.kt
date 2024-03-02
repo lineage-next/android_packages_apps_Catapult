@@ -120,6 +120,24 @@ class MainActivity : Activity() {
     }
 
     private fun onChannelShown(channelId: Long) {
+        if (channelId == Channel.WATCH_NEXT_ID) {
+            mMainVerticalAdapter.addItem(
+                Pair(
+                    Channel.WATCH_NEXT_ID,
+                    MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))
+                )
+            )
+            return
+        } else if (channelId == Channel.ALL_APPS_ID) {
+            mMainVerticalAdapter.addItem(
+                Pair(
+                    Channel.ALL_APPS_ID,
+                    MainRowItem(getString(R.string.other_apps), AppsAdapter(this))
+                )
+            )
+            return
+        }
+
         var channel: PreviewChannel? = null
         for (c in mChannels) {
             if (c.id == channelId) {

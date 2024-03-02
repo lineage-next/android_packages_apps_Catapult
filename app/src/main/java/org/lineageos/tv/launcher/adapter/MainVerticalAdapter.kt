@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.lineageos.tv.launcher.model.MainRowItem
+import org.lineageos.tv.launcher.utils.Suggestions
+import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 import org.lineageos.tv.launcher.view.VerticalRowItem
 
 class MainVerticalAdapter(private val mContext: Context,
@@ -36,9 +38,13 @@ class MainVerticalAdapter(private val mContext: Context,
     }
 
     fun addItem(item: Pair<Long, MainRowItem>) {
-        // All apps is always last
-        mRowList.add(mRowList.size - 1, item)
-        notifyItemInserted(mRowList.size - 2)
+        var temp = mRowList.toMutableList()
+        temp.add(item)
+        temp = temp.orderSuggestions(Suggestions.getChannelOrder(mContext)) { it.first } as ArrayList
+        var index = temp.indexOf(item)
+        if (index == -1) { index = (mRowList.size - 1) }
+        mRowList.add(index, item)
+        notifyItemInserted(index)
     }
 
     companion object {
