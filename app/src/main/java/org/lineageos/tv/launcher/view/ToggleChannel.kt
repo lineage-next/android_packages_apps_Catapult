@@ -6,10 +6,8 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.tvprovider.media.tv.PreviewChannel
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Channel
-import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 
 class ToggleChannel : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
@@ -32,7 +30,8 @@ class ToggleChannel : LinearLayout {
         inflate(context, R.layout.toggle_channel, this)
         isFocusable = true
         isClickable = true
-        background = AppCompatResources.getDrawable(context, R.drawable.favorites_app_card_background)
+        background =
+            AppCompatResources.getDrawable(context, R.drawable.favorites_app_card_background)
     }
 
     fun setData(channel: Channel, hidden: Boolean) {

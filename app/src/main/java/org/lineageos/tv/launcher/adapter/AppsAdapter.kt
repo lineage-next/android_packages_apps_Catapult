@@ -41,7 +41,12 @@ open class AppsAdapter(protected val mContext: Context) :
         }
     }
 
-    protected open fun handleKey(v: View, keyCode: Int, keyEvent: KeyEvent, adapterPosition: Int): Boolean {
+    protected open fun handleKey(
+        v: View,
+        keyCode: Int,
+        keyEvent: KeyEvent,
+        adapterPosition: Int,
+    ): Boolean {
         return false
     }
 

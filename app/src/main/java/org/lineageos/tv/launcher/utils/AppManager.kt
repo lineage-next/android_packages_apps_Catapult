@@ -67,6 +67,10 @@ object AppManager {
     fun uninstallApp(context: Context, packageName: String) {
         val packageUri = Uri.parse("package:$packageName")
         val uninstallIntent = Intent(Intent.ACTION_DELETE, packageUri)
-        (context as Activity).startActivityForResult(uninstallIntent, MainActivity.REQUEST_CODE_UNINSTALL,null)
+        (context as Activity).startActivityForResult(
+            uninstallIntent,
+            MainActivity.REQUEST_CODE_UNINSTALL,
+            null
+        )
     }
 }

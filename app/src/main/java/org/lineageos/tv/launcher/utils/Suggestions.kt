@@ -19,7 +19,8 @@ object Suggestions {
     internal var onChannelHiddenCallback: (channelId: Long) -> Unit = {}
     internal var onChannelShownCallback: (channelId: Long) -> Unit = {}
     internal var onChannelSelectedCallback: (channelId: Long, index: Int) -> Unit = { _, _ -> }
-    internal var onChannelOrderChangedCallback: (moveChannelId: Long?, otherChannelId: Long?) -> Unit = { _, _, -> }
+    internal var onChannelOrderChangedCallback: (moveChannelId: Long?, otherChannelId: Long?) -> Unit =
+        { _, _, -> }
 
     fun getWatchNextPrograms(context: Context): List<WatchNextProgram> {
         val cursor = context.contentResolver.query(
@@ -39,9 +40,11 @@ object Suggestions {
         while (cursor.moveToNext()) {
             try {
                 val watchNextProgram = WatchNextProgram.fromCursor(cursor)
-                val resolvedActivity = watchNextProgram.intent.resolveActivity(context.packageManager)
+                val resolvedActivity =
+                    watchNextProgram.intent.resolveActivity(context.packageManager)
                 if (resolvedActivity == null ||
-                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS) {
+                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS
+                ) {
                     // This can't be opened with any app
                     continue
                 }
@@ -107,7 +110,8 @@ object Suggestions {
                 val previewProgram = PreviewProgram.fromCursor(cursor)
                 val resolvedActivity = previewProgram.intent.resolveActivity(context.packageManager)
                 if (resolvedActivity == null ||
-                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS) {
+                    resolvedActivity.packageName == PACKAGE_FRAMEWORK_STUBS
+                ) {
                     // This can't be opened with any app
                     continue
                 }
@@ -161,7 +165,8 @@ object Suggestions {
 
     fun getChannelTitle(context: Context, previewChannel: PreviewChannel): String {
         return context.resources.getString(
-            R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
+            R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName
+        )
     }
 
     fun saveChannelOrder(
@@ -169,7 +174,7 @@ object Suggestions {
         from: Int,
         to: Int,
         channels: List<Long>,
-        notify: Boolean
+        notify: Boolean,
     ) {
         val sharedPreferences = context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()

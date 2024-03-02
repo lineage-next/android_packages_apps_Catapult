@@ -8,7 +8,7 @@ class ActivityLauncher(
     label: String,
     icon: Drawable,
     context: Context,
-    private val intent: Intent
+    private val intent: Intent,
 ) : Launchable(label, "", icon, context) {
     override var mHasMenu: Boolean = false
 

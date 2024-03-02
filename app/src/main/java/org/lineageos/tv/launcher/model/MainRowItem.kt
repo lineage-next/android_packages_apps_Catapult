@@ -4,5 +4,5 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainRowItem(
     val label: String,
-    val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>
+    val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>,
 )

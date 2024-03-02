@@ -18,7 +18,6 @@ import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
-import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 
 
@@ -43,7 +42,12 @@ class MainActivity : Activity() {
         val hiddenChannels = Suggestions.getHiddenChannels(this)
 
         // Add favorites-row. Can't be hidden
-        mainItems.add(Pair(Channel.FAVORITE_APPS_ID, MainRowItem(getString(R.string.favorites), mFavoritesAdapter)))
+        mainItems.add(
+            Pair(
+                Channel.FAVORITE_APPS_ID,
+                MainRowItem(getString(R.string.favorites), mFavoritesAdapter)
+            )
+        )
 
         // Add watch next -row
         if (Channel.WATCH_NEXT_ID !in hiddenChannels) {
@@ -66,9 +70,15 @@ class MainActivity : Activity() {
             if (previewPrograms.isEmpty()) {
                 continue
             }
-            mainItems.add(Pair(channel.id,
-                MainRowItem(Suggestions.getChannelTitle(this, channel),
-                    ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
+            mainItems.add(
+                Pair(
+                    channel.id,
+                    MainRowItem(
+                        Suggestions.getChannelTitle(this, channel),
+                        ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)
+                    )
+                )
+            )
         }
 
         // Add All apps -row
@@ -154,11 +164,20 @@ class MainActivity : Activity() {
             return
         }
 
-        mMainVerticalAdapter.addItem(Pair(channel.id, MainRowItem(channel.displayName.toString(),
-            ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
+        mMainVerticalAdapter.addItem(
+            Pair(
+                channel.id, MainRowItem(
+                    channel.displayName.toString(),
+                    ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)
+                )
+            )
+        )
     }
 
-    private fun onChannelOrderChanged(moveChannelId: Long?, otherChannelId: Long?) {
+    private fun onChannelOrderChanged(
+        moveChannelId: Long?,
+        otherChannelId: Long?,
+    ) {
         val isMovingChannelShowing = mMainVerticalAdapter.isChannelShowing(moveChannelId)
         val isOtherChannelShowing = mMainVerticalAdapter.isChannelShowing(otherChannelId)
         if (!isMovingChannelShowing || !isOtherChannelShowing) {

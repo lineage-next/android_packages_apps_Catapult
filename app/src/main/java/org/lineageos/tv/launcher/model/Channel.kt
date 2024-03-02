@@ -2,7 +2,7 @@ package org.lineageos.tv.launcher.model
 
 class Channel(
     val id: Long,
-    val title: String
+    val title: String,
 ) {
     companion object {
         const val FAVORITE_APPS_ID: Long = -2

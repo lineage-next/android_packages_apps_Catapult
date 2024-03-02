@@ -82,6 +82,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                     }
                     return false
                 }
+
                 KeyEvent.KEYCODE_DPAD_UP -> {
                     if (v.mMoving) {
                         if (pos == 0) {
@@ -96,6 +97,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
                         return true
                     }
                 }
+
                 KeyEvent.KEYCODE_DPAD_DOWN -> {
                     if (v.mMoving) {
                         if (pos == mChannels.size - 1) {

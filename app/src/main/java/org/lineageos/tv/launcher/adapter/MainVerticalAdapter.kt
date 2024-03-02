@@ -11,8 +11,10 @@ import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 import org.lineageos.tv.launcher.view.VerticalRowItem
 import java.util.Collections
 
-class MainVerticalAdapter(private val mContext: Context,
-                          private val mRowList: ArrayList<Pair<Long, MainRowItem>>) :
+class MainVerticalAdapter(
+    private val mContext: Context,
+    private val mRowList: ArrayList<Pair<Long, MainRowItem>>,
+) :
     RecyclerView.Adapter<MainVerticalAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -42,9 +44,12 @@ class MainVerticalAdapter(private val mContext: Context,
     fun addItem(item: Pair<Long, MainRowItem>) {
         var temp = mRowList.toMutableList()
         temp.add(item)
-        temp = temp.orderSuggestions(Suggestions.getChannelOrder(mContext)) { it.first } as ArrayList
+        temp =
+            temp.orderSuggestions(Suggestions.getChannelOrder(mContext)) { it.first } as ArrayList
         var index = temp.indexOf(item)
-        if (index == -1) { index = (mRowList.size - 1) }
+        if (index == -1) {
+            index = (mRowList.size - 1)
+        }
         mRowList.add(index, item)
         notifyItemInserted(index)
     }
@@ -58,7 +63,7 @@ class MainVerticalAdapter(private val mContext: Context,
 
     fun findChannelIndex(channelId: Long?): Int {
         channelId ?: return -1
-        return  mRowList.indexOfFirst { it.first == channelId }
+        return mRowList.indexOfFirst { it.first == channelId }
     }
 
     fun itemMoved(from: Int, to: Int) {

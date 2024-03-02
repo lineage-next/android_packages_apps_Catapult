@@ -29,11 +29,15 @@ open class LargeImageButton : LinearLayout {
     }
 
     private fun setup(attrs: AttributeSet) {
-        val text = attrs.getAttributeResourceValue("http://schemas.android.com/apk/res/android",
-            "text", R.string.empty)
+        val text = attrs.getAttributeResourceValue(
+            "http://schemas.android.com/apk/res/android",
+            "text", R.string.empty
+        )
         val drawableResource =
-            attrs.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "src",
-                androidx.leanback.R.drawable.lb_ic_sad_cloud)
+            attrs.getAttributeResourceValue(
+                "http://schemas.android.com/apk/res/android", "src",
+                androidx.leanback.R.drawable.lb_ic_sad_cloud
+            )
         mTextView.text = context.getString(text)
         mImageView.setImageDrawable(AppCompatResources.getDrawable(context, drawableResource))
     }

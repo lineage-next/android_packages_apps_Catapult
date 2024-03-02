@@ -79,7 +79,12 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         )
     }
 
-    override fun handleKey(v: View, keyCode: Int, keyEvent: KeyEvent, adapterPosition: Int): Boolean {
+    override fun handleKey(
+        v: View,
+        keyCode: Int,
+        keyEvent: KeyEvent,
+        adapterPosition: Int,
+    ): Boolean {
         v as FavoriteCard
 
         // Leave center key for onClick handler
@@ -100,6 +105,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
                 }
                 return false
             }
+
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (v.mMoving) {
                     if (adapterPosition == 0) {
@@ -110,6 +116,7 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
                     return true
                 }
             }
+
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 if (v.mMoving) {
                     if (adapterPosition == mAppsList.size - (STABLE_ITEM_COUNT + 1)) {
@@ -122,7 +129,8 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             }
             // Don't allow moving up or down while moving a favorite app
             KeyEvent.KEYCODE_DPAD_DOWN,
-            KeyEvent.KEYCODE_DPAD_UP ->
+            KeyEvent.KEYCODE_DPAD_UP,
+            ->
                 return v.mMoving
         }
 
