@@ -4,4 +4,15 @@
     <style name="SettingsButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="WatchNextCardTitle" parent="Widget.Leanback.Row.Header.Description">
+        <item name="android:textAlignment">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">"@android:color/white"</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
 </resources>

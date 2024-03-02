@@ -2,6 +2,7 @@
 
     <style name="Theme.TvTrebuchet" parent="Theme.Leanback">
         <item name="android:windowBackground">#121212</item>
+        <item name="defaultSectionHeaderColor">#FFFFFF</item>
     </style>
 
     <style name="Theme.TvTrebuchet.AddFavorite" parent="Theme.Leanback">

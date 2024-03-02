@@ -2,4 +2,6 @@
 <resources>
     <dimen name="card_height">84dp</dimen>
     <dimen name="card_width">149dp</dimen>
+    <dimen name="card_width_4_3">112dp</dimen>
+    <dimen name="card_width_3_2">126dp</dimen>
 </resources>

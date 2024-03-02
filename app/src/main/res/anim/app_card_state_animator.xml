@@ -20,13 +20,13 @@
     <item android:state_focused="true">
         <set>
             <objectAnimator
-                android:duration="150"
+                android:duration="300"
                 android:interpolator="@interpolator/control_state"
                 android:propertyName="scaleX"
                 android:valueTo="1.11"
                 android:valueType="floatType" />
             <objectAnimator
-                android:duration="150"
+                android:duration="300"
                 android:interpolator="@interpolator/control_state"
                 android:propertyName="scaleY"
                 android:valueTo="1.11"
@@ -36,13 +36,13 @@
     <item>
         <set>
             <objectAnimator
-                android:duration="50"
+                android:duration="100"
                 android:interpolator="@interpolator/control_state"
                 android:propertyName="scaleX"
                 android:valueTo="1.0"
                 android:valueType="floatType" />
             <objectAnimator
-                android:duration="50"
+                android:duration="100"
                 android:interpolator="@interpolator/control_state"
                 android:propertyName="scaleY"
                 android:valueTo="1.0"

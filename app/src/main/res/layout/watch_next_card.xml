@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:maxWidth="@dimen/card_width"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/card_height"
+    android:layout_height="wrap_content"
     android:layout_marginEnd="12dp"
     android:clickable="true"
     android:clipChildren="false"
@@ -13,7 +13,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/card_height"
         android:clipChildren="true">
         <ImageView
             android:id="@+id/app_banner"
@@ -22,7 +22,28 @@
             android:background="@drawable/app_card_background"
             android:backgroundTint="@android:color/black"
             android:clipToOutline="true"
+            android:layout_gravity="center_horizontal"
             android:visibility="gone" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/title_16_9"
+        android:layout_width="@dimen/card_width"
+        android:layout_height="wrap_content"
+        style="@style/WatchNextCardTitle"
+        tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/title_4_3"
+        android:layout_width="@dimen/card_width_4_3"
+        android:layout_height="wrap_content"
+        style="@style/WatchNextCardTitle"
+        tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/title_3_2"
+        android:layout_width="@dimen/card_width_3_2"
+        android:layout_height="wrap_content"
+        style="@style/WatchNextCardTitle"
+        tools:ignore="RtlCompat" />
 </LinearLayout>
