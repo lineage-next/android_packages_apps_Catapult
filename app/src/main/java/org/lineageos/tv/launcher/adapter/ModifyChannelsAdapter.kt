@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
 import androidx.recyclerview.widget.RecyclerView
-import androidx.tvprovider.media.tv.PreviewChannel
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.view.ToggleChannel
 import java.util.Collections
 
-class ModifyChannelsAdapter(private val mContext: Context, private val mChannels: List<PreviewChannel>) :
+class ModifyChannelsAdapter(private val mContext: Context, private val mChannels: List<Channel>) :
     RecyclerView.Adapter<ModifyChannelsAdapter.ViewHolder>() {
 
     val hiddenChannels: ArrayList<Long> by lazy { Suggestions.getHiddenChannels(mContext) }
@@ -22,7 +22,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         View.OnClickListener, View.OnLongClickListener, View.OnKeyListener {
 
         @SuppressLint("UseSwitchCompatOrMaterialCode") // Not available for leanback
-        val mSwitch: Switch = itemView.findViewById<Switch>(R.id.state_switch)
+        val mSwitch: Switch = itemView.findViewById(R.id.state_switch)
 
         init {
             itemView.setOnClickListener(this)
@@ -35,6 +35,10 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
 
             if (v.mMoving) {
                 v.setMoveDone()
+                return
+            }
+
+            if (!mSwitch.isEnabled) {
                 return
             }
 
@@ -116,7 +120,12 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         if (hiddenChannels.contains(mChannels[i].id)) {
             hidden = true
         }
-        (viewHolder.itemView as ToggleChannel).setData(mChannels[i], hidden)
+        val v = viewHolder.itemView as ToggleChannel
+        v.setData(mChannels[i], hidden)
+
+        if (mChannels[i].id == Channel.FAVORITE_APPS_ID) {
+            v.disableToggle()
+        }
     }
 
     override fun getItemCount(): Int {

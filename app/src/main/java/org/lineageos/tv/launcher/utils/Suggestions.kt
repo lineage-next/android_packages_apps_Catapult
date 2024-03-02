@@ -9,6 +9,7 @@ import androidx.tvprovider.media.tv.PreviewChannel
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import androidx.tvprovider.media.tv.WatchNextProgram
+import org.lineageos.tv.launcher.R
 
 @SuppressLint("RestrictedApi")
 object Suggestions {
@@ -155,6 +156,11 @@ object Suggestions {
 
         // Notify
         onChannelShownCallback(channelId)
+    }
+
+    fun getChannelTitle(context: Context, previewChannel: PreviewChannel): String {
+        return context.resources.getString(
+            R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
     }
 
     fun saveChannelOrder(context: Context, from: Int, to: Int, channels: List<Long>, notify: Boolean) {

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.tvprovider.media.tv.PreviewChannel
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.utils.Suggestions.getAppName
 
 class ToggleChannel : LinearLayout {
@@ -34,11 +35,14 @@ class ToggleChannel : LinearLayout {
         background = AppCompatResources.getDrawable(context, R.drawable.favorites_app_card_background)
     }
 
-    fun setData(previewChannel: PreviewChannel, hidden: Boolean) {
-        mTitleView.text = resources.getString(
-            R.string.channel_title, previewChannel.getAppName(context), previewChannel.displayName)
-        mChannelId = previewChannel.id
+    fun setData(channel: Channel, hidden: Boolean) {
+        mTitleView.text = channel.title
+        mChannelId = channel.id
         mSwitch.isChecked = !hidden
+    }
+
+    fun disableToggle() {
+        mSwitch.isEnabled = false
     }
 
     fun setMoving() {
