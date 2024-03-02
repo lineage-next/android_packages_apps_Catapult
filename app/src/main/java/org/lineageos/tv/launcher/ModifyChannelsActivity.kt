@@ -19,15 +19,13 @@ class ModifyChannelsActivity : Activity() {
         val channelsGrid: VerticalGridView = findViewById(R.id.modify_channels_grid)
         val channelOrder = Suggestions.getChannelOrder(this)
         val previewChannels = Suggestions.getPreviewChannels(this)
-        val channels: ArrayList<Channel> = previewChannels.map {
-            Channel(
-                it.id,
-                Suggestions.getChannelTitle(this, it)
-            )
-        } as ArrayList<Channel>
+        val channels = ArrayList<Channel>()
         channels.add(Channel(Channel.FAVORITE_APPS_ID, getString(R.string.favorites)))
-        channels.add(Channel(Channel.ALL_APPS_ID, getString(R.string.other_apps)))
         channels.add(Channel(Channel.WATCH_NEXT_ID, getString(R.string.watch_next)))
+        previewChannels.map {
+            channels.add(Channel(it.id, Suggestions.getChannelTitle(this, it)))
+        }
+        channels.add(Channel(Channel.ALL_APPS_ID, getString(R.string.other_apps)))
 
         channelsGrid.adapter =
             ModifyChannelsAdapter(this, channels.orderSuggestions(channelOrder) { it.id })
