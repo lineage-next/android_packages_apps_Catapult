@@ -14,6 +14,7 @@ import org.lineageos.tv.launcher.adapter.ChannelAdapter
 import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
 import org.lineageos.tv.launcher.adapter.WatchNextAdapter
+import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
@@ -37,12 +38,24 @@ class MainActivity : Activity() {
 
         val mainItems = ArrayList<Pair<Long, MainRowItem>>()
         mFavoritesAdapter = FavoritesAdapter(this)
-        mainItems.add(Pair(-1, MainRowItem(getString(R.string.favorites), mFavoritesAdapter)))
-        mainItems.add(Pair(-1, MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))))
 
-        val channelOrder = Suggestions.getChannelOrder(this)
         val hiddenChannels = Suggestions.getHiddenChannels(this)
-        mChannels = Suggestions.getPreviewChannels(this).orderSuggestions(channelOrder) { it.id }
+
+        // Add favorites-row. Can't be hidden
+        mainItems.add(Pair(Channel.FAVORITE_APPS_ID, MainRowItem(getString(R.string.favorites), mFavoritesAdapter)))
+
+        // Add watch next -row
+        if (Channel.WATCH_NEXT_ID !in hiddenChannels) {
+            mainItems.add(
+                Pair(
+                    Channel.WATCH_NEXT_ID,
+                    MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))
+                )
+            )
+        }
+
+        // Add preview channels from apps
+        mChannels = Suggestions.getPreviewChannels(this)
         for (channel in mChannels) {
             if (channel.id in hiddenChannels) {
                 continue
@@ -53,15 +66,24 @@ class MainActivity : Activity() {
                 continue
             }
             mainItems.add(Pair(channel.id,
-                MainRowItem(resources.getString(
-                    R.string.channel_title, channel.getAppName(this), channel.displayName),
+                MainRowItem(Suggestions.getChannelTitle(this, channel),
                     ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>))))
         }
 
-        mainItems.add(Pair(-1, MainRowItem(getString(R.string.other_apps), AppsAdapter(this))))
+        // Add All apps -row
+        if (Channel.ALL_APPS_ID !in hiddenChannels) {
+            mainItems.add(
+                Pair(
+                    Channel.ALL_APPS_ID,
+                    MainRowItem(getString(R.string.other_apps), AppsAdapter(this))
+                )
+            )
+        }
 
         val mainVerticalGridView: VerticalGridView = findViewById(R.id.main_vertical_grid)
-        mMainVerticalAdapter = MainVerticalAdapter(this, mainItems)
+        mMainVerticalAdapter = MainVerticalAdapter(this,
+            mainItems.orderSuggestions(Suggestions.getChannelOrder(this)) { it.first } as ArrayList)
+
         mainVerticalGridView.adapter = mMainVerticalAdapter
 
         AppManager.onFavoriteAddedCallback = ::onFavoriteAdded
