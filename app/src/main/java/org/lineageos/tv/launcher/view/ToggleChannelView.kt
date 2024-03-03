@@ -9,7 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Channel
 
-class ToggleChannel : LinearLayout {
+class ToggleChannelView : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
     private val mSwitch: Switch by lazy { findViewById(R.id.state_switch) }
 

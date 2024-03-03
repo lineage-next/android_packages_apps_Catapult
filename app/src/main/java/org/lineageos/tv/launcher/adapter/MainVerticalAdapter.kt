@@ -1,26 +1,23 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import org.lineageos.tv.launcher.model.MainRowItem
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
-import org.lineageos.tv.launcher.view.VerticalRowItem
 import java.util.Collections
 
 class MainVerticalAdapter(
     private val mContext: Context,
-    private val mRowList: ArrayList<Pair<Long, MainRowItem>>,
+    private val mRowList: ArrayList<Pair<Long, org.lineageos.tv.launcher.model.MainRowItem>>,
 ) :
     RecyclerView.Adapter<MainVerticalAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        (viewHolder.itemView as VerticalRowItem).setData(mRowList[i].second)
+        (viewHolder.itemView as org.lineageos.tv.launcher.view.MainRowItem).setData(mRowList[i].second)
     }
 
     override fun getItemCount(): Int {
@@ -28,7 +25,7 @@ class MainVerticalAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(VerticalRowItem(mContext))
+        return ViewHolder(org.lineageos.tv.launcher.view.MainRowItem(mContext))
     }
 
     fun removeItem(item: Long) {
@@ -41,7 +38,7 @@ class MainVerticalAdapter(
         }
     }
 
-    fun addItem(item: Pair<Long, MainRowItem>) {
+    fun addItem(item: Pair<Long, org.lineageos.tv.launcher.model.MainRowItem>) {
         var temp = mRowList.toMutableList()
         temp.add(item)
         temp =

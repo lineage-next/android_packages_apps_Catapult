@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.utils.Suggestions
-import org.lineageos.tv.launcher.view.ToggleChannel
+import org.lineageos.tv.launcher.view.ToggleChannelView
 import java.util.Collections
 
 class ModifyChannelsAdapter(private val mContext: Context, private val mChannels: List<Channel>) :
@@ -31,7 +31,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         }
 
         override fun onClick(v: View) {
-            v as ToggleChannel
+            v as ToggleChannelView
 
             if (v.mMoving) {
                 v.setMoveDone()
@@ -54,14 +54,14 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         }
 
         override fun onLongClick(v: View): Boolean {
-            v as ToggleChannel
+            v as ToggleChannelView
             v.setMoving()
             v.mChannelId?.let { Suggestions.onChannelSelectedCallback(it, bindingAdapterPosition) }
             return true
         }
 
         override fun onKey(v: View?, keyCode: Int, keyEvent: KeyEvent): Boolean {
-            v as ToggleChannel
+            v as ToggleChannelView
 
             // Leave center key for onClick handler
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
@@ -123,7 +123,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
         if (hiddenChannels.contains(mChannels[i].id)) {
             hidden = true
         }
-        val v = viewHolder.itemView as ToggleChannel
+        val v = viewHolder.itemView as ToggleChannelView
         v.setData(mChannels[i], hidden)
 
         if (mChannels[i].id == Channel.FAVORITE_APPS_ID) {
@@ -136,7 +136,7 @@ class ModifyChannelsAdapter(private val mContext: Context, private val mChannels
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = ToggleChannel(parent.context)
+        val itemView = ToggleChannelView(parent.context)
 
         itemView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,

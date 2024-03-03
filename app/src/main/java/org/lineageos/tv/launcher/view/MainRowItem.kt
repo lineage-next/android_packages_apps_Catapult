@@ -9,7 +9,7 @@ import androidx.leanback.widget.HorizontalGridView
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.MainRowItem
 
-class VerticalRowItem : LinearLayout {
+class MainRowItem : LinearLayout {
     private val mTitleView: TextView by lazy { findViewById(R.id.title) }
     private val mHorizontalGridView: HorizontalGridView by lazy { findViewById(R.id.horizontal_grid) }
 

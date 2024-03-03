@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.view.Card
-import org.lineageos.tv.launcher.view.FavoriteAllAppsCard
+import org.lineageos.tv.launcher.view.AddFavoriteCard
 
 class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     private var mFavoritePackageNames = ArrayList<String>()
@@ -14,7 +14,7 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun handleClick(app: Card) {
-        app as FavoriteAllAppsCard
+        app as AddFavoriteCard
         if (mFavoritePackageNames.contains(app.mPackageName)) {
             AppManager.removeFavoriteApp(mContext, app.mPackageName)
             app.setActionAdd()
@@ -28,7 +28,7 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
 
 
     override fun onBindViewHolder(viewHolder: AppsAdapter.ViewHolder, i: Int) {
-        val card = viewHolder.itemView as FavoriteAllAppsCard
+        val card = viewHolder.itemView as AddFavoriteCard
         card.setCardInfo(mAppsList[i])
 
         if (mFavoritePackageNames.contains(mAppsList[i].mPackageName)) {
@@ -37,7 +37,7 @@ class AllAppsFavoritesAdapter(context: Context) : AppsAdapter(context) {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = FavoriteAllAppsCard(parent.context)
+        val itemView = AddFavoriteCard(parent.context)
 
         itemView.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,

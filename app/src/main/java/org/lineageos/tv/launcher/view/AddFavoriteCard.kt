@@ -2,15 +2,13 @@ package org.lineageos.tv.launcher.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import org.lineageos.tv.launcher.R
-import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
-class FavoriteAllAppsCard : Card {
+class AddFavoriteCard : Card {
     val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
     val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mActionIconView: ImageView
