@@ -81,6 +81,8 @@ open class AppsAdapter(protected val mContext: Context) :
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        itemView.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+
         return ViewHolder(itemView)
     }
 

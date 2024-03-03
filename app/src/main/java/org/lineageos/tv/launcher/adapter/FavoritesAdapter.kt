@@ -49,7 +49,6 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         (viewHolder.itemView as FavoriteCard).setCardInfo(mAppsList[i])
-        if (i == 0) viewHolder.itemView.requestFocus()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,6 +58,8 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+
+        itemView.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
 
         return ViewHolder(itemView)
     }
