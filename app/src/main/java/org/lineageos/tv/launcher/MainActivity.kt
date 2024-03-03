@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.leanback.widget.VerticalGridView
 import androidx.tvprovider.media.tv.BasePreviewProgram
 import androidx.tvprovider.media.tv.PreviewChannel
@@ -102,6 +103,11 @@ class MainActivity : Activity() {
             mainItems.orderSuggestions(Suggestions.getChannelOrder(this)) { it.first } as ArrayList)
 
         mMainVerticalGridView.adapter = mMainVerticalAdapter
+
+        val settingButton: ImageButton = findViewById(R.id.settings_button)
+        settingButton.setOnClickListener {
+            startActivityForResult(Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+        }
 
         AppManager.onFavoriteAddedCallback = ::onFavoriteAdded
         AppManager.onFavoriteRemovedCallback = ::onFavoriteRemoved
