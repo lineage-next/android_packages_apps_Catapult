@@ -9,8 +9,8 @@ import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.Launchable
 
 class AddFavoriteCard : Card {
-    val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
-    val mNameView: TextView by lazy { findViewById(R.id.app_name) }
+    private val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
+    private val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mActionIconView: ImageView
 
     constructor(context: Context?) : super(context)
