@@ -6,11 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.leanback.widget.VerticalGridView
+import androidx.tvprovider.media.tv.BasePreviewProgram
 import androidx.tvprovider.media.tv.PreviewChannel
-import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import org.lineageos.tv.launcher.adapter.AppsAdapter
-import org.lineageos.tv.launcher.adapter.ChannelAdapter
 import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
 import org.lineageos.tv.launcher.adapter.WatchNextAdapter
@@ -54,7 +53,14 @@ class MainActivity : Activity() {
             mainItems.add(
                 Pair(
                     Channel.WATCH_NEXT_ID,
-                    MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))
+                    MainRowItem(
+                        getString(R.string.watch_next),
+                        WatchNextAdapter(
+                            this,
+                            Suggestions.getWatchNextPrograms(this)
+                                .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
+                        )
+                    )
                 )
             )
         }
@@ -66,16 +72,16 @@ class MainActivity : Activity() {
                 continue
             }
 
-            val previewPrograms = Suggestions.getSuggestions(this, channel.id).take(5)
+            val previewPrograms = Suggestions.getSuggestions(this, channel.id)
+                .take(5).filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
             if (previewPrograms.isEmpty()) {
                 continue
             }
             mainItems.add(
                 Pair(
-                    channel.id,
-                    MainRowItem(
+                    channel.id, MainRowItem(
                         Suggestions.getChannelTitle(this, channel),
-                        ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)
+                        WatchNextAdapter(this, previewPrograms)
                     )
                 )
             )
@@ -136,7 +142,13 @@ class MainActivity : Activity() {
             mMainVerticalAdapter.addItem(
                 Pair(
                     Channel.WATCH_NEXT_ID,
-                    MainRowItem(getString(R.string.watch_next), WatchNextAdapter(this))
+                    MainRowItem(
+                        getString(R.string.watch_next), WatchNextAdapter(
+                            this,
+                            Suggestions.getWatchNextPrograms(this)
+                                .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
+                        )
+                    )
                 )
             )
             return
@@ -160,6 +172,7 @@ class MainActivity : Activity() {
         channel ?: return
 
         val previewPrograms = Suggestions.getSuggestions(this, channel.id).take(5)
+            .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
         if (previewPrograms.isEmpty()) {
             return
         }
@@ -168,7 +181,7 @@ class MainActivity : Activity() {
             Pair(
                 channel.id, MainRowItem(
                     channel.displayName.toString(),
-                    ChannelAdapter(this, previewPrograms as ArrayList<PreviewProgram>)
+                    WatchNextAdapter(this, previewPrograms)
                 )
             )
         )
