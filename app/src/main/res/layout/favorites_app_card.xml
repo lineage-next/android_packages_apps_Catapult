@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="149dp"
-    android:layout_height="84dp"
+    android:layout_width="@dimen/app_card_width"
+    android:layout_height="@dimen/app_card_height"
     android:layout_marginEnd="12dp"
     android:background="@drawable/app_card_background"
     android:clickable="true"
@@ -36,8 +36,8 @@
 
             <ImageView
                 android:id="@+id/app_icon"
-                android:layout_width="52dp"
-                android:layout_height="52dp" />
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
 
             <TextView
                 android:id="@+id/app_name"

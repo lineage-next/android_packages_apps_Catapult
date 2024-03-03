@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="card_height">84dp</dimen>
-    <dimen name="card_width">149dp</dimen>
+    <dimen name="app_card_height">71dp</dimen>
+    <dimen name="app_card_width">127dp</dimen>
+    <dimen name="card_height">92dp</dimen>
+    <dimen name="card_width">164dp</dimen>
     <dimen name="card_width_4_3">112dp</dimen>
     <dimen name="card_width_3_2">126dp</dimen>
+    <dimen name="main_row_height">164dp</dimen>
+    <dimen name="main_app_row_height">122dp</dimen>
 </resources>

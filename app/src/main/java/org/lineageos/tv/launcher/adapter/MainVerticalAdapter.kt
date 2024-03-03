@@ -3,7 +3,9 @@ package org.lineageos.tv.launcher.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 import java.util.Collections
@@ -17,7 +19,17 @@ class MainVerticalAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        (viewHolder.itemView as org.lineageos.tv.launcher.view.MainRowItem).setData(mRowList[i].second)
+        val v = (viewHolder.itemView as org.lineageos.tv.launcher.view.MainRowItem)
+        v.setData(mRowList[i].second)
+        v.layoutParams =  if (mRowList[i].second.adapter is AppsAdapter) {
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                mContext.resources.getDimension(R.dimen.main_app_row_height).toInt())
+        } else {
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                mContext.resources.getDimension(R.dimen.main_row_height).toInt())
+        }
     }
 
     override fun getItemCount(): Int {
