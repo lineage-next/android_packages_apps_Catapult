@@ -13,7 +13,7 @@ import coil.load
 import org.lineageos.tv.launcher.R
 
 
-open class WatchNextCard : Card, View.OnFocusChangeListener {
+class WatchNextCard : Card, View.OnFocusChangeListener {
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     private var mTitle: TextView? = null
 
@@ -30,7 +30,7 @@ open class WatchNextCard : Card, View.OnFocusChangeListener {
     init {
         stateListAnimator =
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
-        setOnFocusChangeListener(this)
+        onFocusChangeListener = this
     }
 
     override fun inflate() {

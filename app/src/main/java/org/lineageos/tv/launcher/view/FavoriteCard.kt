@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import org.lineageos.tv.launcher.R
 
-open class FavoriteCard : AppCard {
+class FavoriteCard : AppCard {
     private val mMoveOverlayView: ImageView by lazy { findViewById(R.id.app_move_handle) }
     var mMoving: Boolean = false
 
