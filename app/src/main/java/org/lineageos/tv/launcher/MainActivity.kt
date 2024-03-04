@@ -3,6 +3,7 @@ package org.lineageos.tv.launcher
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.ImageButton
@@ -16,6 +17,7 @@ import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
 import org.lineageos.tv.launcher.adapter.WatchNextAdapter
 import org.lineageos.tv.launcher.model.Channel
 import org.lineageos.tv.launcher.model.MainRowItem
+import org.lineageos.tv.launcher.receiver.PackageReceiver
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
@@ -24,6 +26,8 @@ import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 class MainActivity : Activity() {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
     private lateinit var mMainVerticalAdapter: MainVerticalAdapter
+    private lateinit var mAllAppsAdapter: AppsAdapter
+
     private lateinit var mChannels: List<PreviewChannel>
     private lateinit var mMainVerticalGridView: VerticalGridView
 
@@ -89,11 +93,12 @@ class MainActivity : Activity() {
         }
 
         // Add All apps -row
+        mAllAppsAdapter = AppsAdapter(this)
         if (Channel.ALL_APPS_ID !in hiddenChannels) {
             mainItems.add(
                 Pair(
                     Channel.ALL_APPS_ID,
-                    MainRowItem(getString(R.string.other_apps), AppsAdapter(this))
+                    MainRowItem(getString(R.string.other_apps), mAllAppsAdapter)
                 )
             )
         }
@@ -116,19 +121,36 @@ class MainActivity : Activity() {
         Suggestions.onChannelShownCallback = ::onChannelShown
         Suggestions.onChannelOrderChangedCallback = ::onChannelOrderChanged
         Suggestions.onChannelSelectedCallback = ::onChannelSelected
+
+        PackageReceiver.onPackageInstalledCallback = ::onPackageInstalled
+        PackageReceiver.onPackageUninstalledCallback = ::onPackageUninstalled
+
+        // Has to be registered in code
+        // https://developer.android.com/develop/background-work/background-tasks/broadcasts/broadcast-exceptions
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
+        intentFilter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED)
+        intentFilter.addDataScheme("package")
+        registerReceiver(PackageReceiver(), intentFilter)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_UNINSTALL) {
-            if (resultCode == RESULT_OK) {
-                mFavoritesAdapter.updateFavoriteApps(AppManager.getFavoriteApps(this))
-            }
+    private fun onPackageInstalled(packageName: String) {
+        // Add the app to All apps -list
+        val hiddenChannels = Suggestions.getHiddenChannels(this)
+        if (Channel.ALL_APPS_ID !in hiddenChannels) {
+            mAllAppsAdapter.addItem(packageName)
         }
     }
 
-    companion object {
-        const val REQUEST_CODE_UNINSTALL = 1
+    private fun onPackageUninstalled(packageName: String) {
+        val hiddenChannels = Suggestions.getHiddenChannels(this)
+        if (Channel.ALL_APPS_ID !in hiddenChannels) {
+            mAllAppsAdapter.removeItem(packageName)
+        }
+        if (Channel.FAVORITE_APPS_ID !in hiddenChannels) {
+            mFavoritesAdapter.removeItem(packageName)
+        }
+        AppManager.removeFavoriteApp(this, packageName)
     }
 
     private fun onFavoriteAdded(packageName: String) {

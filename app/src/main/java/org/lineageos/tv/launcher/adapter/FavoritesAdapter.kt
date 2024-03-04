@@ -168,27 +168,11 @@ class FavoritesAdapter(context: Context) : AppsAdapter(context) {
         AppManager.setFavorites(mContext, newFavoritesSet)
     }
 
-    fun addItem(packageName: String) {
+    override fun addItem(packageName: String) {
         val ai: ApplicationInfo = mContext.packageManager.getApplicationInfo(packageName, 0)
         val appInfo = AppInfo(ai, mContext)
         mAppsList.add(mAppsList.size - STABLE_ITEM_COUNT, appInfo) // Take 'Add new' into account
         notifyItemInserted(mAppsList.size - (STABLE_ITEM_COUNT + 1))
-    }
-
-    fun removeItem(packageName: String) {
-        val i = findAppIndex(packageName)
-        mAppsList.removeAt(i)
-        notifyItemRemoved(i)
-    }
-
-    private fun findAppIndex(packageName: String): Int {
-        for (i in 0 until mAppsList.size) {
-            if (mAppsList[i].mPackageName == packageName) {
-                return i
-            }
-        }
-
-        return -1
     }
 
     companion object {

@@ -1,6 +1,7 @@
 package org.lineageos.tv.launcher.adapter
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.view.AppCard
@@ -120,5 +122,20 @@ open class AppsAdapter(protected val mContext: Context) :
         }
 
         popupMenu.show()
+    }
+
+    open fun removeItem(packageName: String) {
+        val index = mAppsList.indexOfFirst { it.mPackageName == packageName }
+        if (index != -1) {
+            mAppsList.removeAt(index)
+            notifyItemRemoved(index)
+        }
+    }
+
+    open fun addItem(packageName: String) {
+        val ai: ApplicationInfo = mContext.packageManager.getApplicationInfo(packageName, 0)
+        val appInfo = AppInfo(ai, mContext)
+        mAppsList.add(mAppsList.size, appInfo)
+        notifyItemInserted(mAppsList.size)
     }
 }
