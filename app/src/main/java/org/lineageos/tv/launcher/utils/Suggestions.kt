@@ -9,6 +9,8 @@ import androidx.tvprovider.media.tv.PreviewChannel
 import androidx.tvprovider.media.tv.PreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import androidx.tvprovider.media.tv.WatchNextProgram
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.lineageos.tv.launcher.R
 
 @SuppressLint("RestrictedApi")
@@ -88,6 +90,12 @@ object Suggestions {
 
         cursor.close()
         return previewChannelList
+    }
+
+    suspend fun getPreviewChannelsAsync(context: Context): List<PreviewChannel> {
+        return withContext(Dispatchers.IO) {
+            return@withContext getPreviewChannels(context)
+        }
     }
 
     fun getSuggestions(context: Context, id: Long): ArrayList<PreviewProgram> {
