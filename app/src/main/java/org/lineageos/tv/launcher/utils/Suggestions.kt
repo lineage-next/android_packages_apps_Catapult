@@ -133,6 +133,12 @@ object Suggestions {
         return previewProgramList
     }
 
+    suspend fun getSuggestionsAsync(context: Context, id: Long): ArrayList<PreviewProgram> {
+        return withContext(Dispatchers.IO) {
+            return@withContext getSuggestions(context, id)
+        }
+    }
+
     fun setHiddenChannels(context: Context, hiddenChannels: ArrayList<Long>) {
         val sharedPreferences = context.getSharedPreferences("Channels", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()

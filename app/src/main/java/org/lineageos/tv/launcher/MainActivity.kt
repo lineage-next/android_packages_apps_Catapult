@@ -1,16 +1,18 @@
 package org.lineageos.tv.launcher
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.ImageButton
+import androidx.fragment.app.FragmentActivity
 import androidx.leanback.widget.VerticalGridView
+import androidx.lifecycle.lifecycleScope
 import androidx.tvprovider.media.tv.BasePreviewProgram
 import androidx.tvprovider.media.tv.PreviewChannel
 import androidx.tvprovider.media.tv.TvContractCompat
+import kotlinx.coroutines.launch
 import org.lineageos.tv.launcher.adapter.AppsAdapter
 import org.lineageos.tv.launcher.adapter.FavoritesAdapter
 import org.lineageos.tv.launcher.adapter.MainVerticalAdapter
@@ -23,7 +25,7 @@ import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.utils.Suggestions.orderSuggestions
 
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
     private lateinit var mFavoritesAdapter: FavoritesAdapter
     private lateinit var mMainVerticalAdapter: MainVerticalAdapter
     private lateinit var mAllAppsAdapter: AppsAdapter
@@ -40,74 +42,14 @@ class MainActivity : Activity() {
             requestPermissions(arrayOf(TvContractCompat.PERMISSION_READ_TV_LISTINGS), 0)
         }
 
-        val mainItems = ArrayList<Pair<Long, MainRowItem>>()
-        mFavoritesAdapter = FavoritesAdapter(this)
-
-        val hiddenChannels = Suggestions.getHiddenChannels(this)
-
-        // Add favorites-row. Can't be hidden
-        mainItems.add(
-            Pair(
-                Channel.FAVORITE_APPS_ID,
-                MainRowItem(getString(R.string.favorites), mFavoritesAdapter)
-            )
-        )
-
-        // Add watch next -row
-        if (Channel.WATCH_NEXT_ID !in hiddenChannels) {
-            mainItems.add(
-                Pair(
-                    Channel.WATCH_NEXT_ID,
-                    MainRowItem(
-                        getString(R.string.watch_next),
-                        WatchNextAdapter(
-                            this,
-                            Suggestions.getWatchNextPrograms(this)
-                                .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
-                        )
-                    )
-                )
-            )
-        }
-
-        // Add preview channels from apps
-        mChannels = Suggestions.getPreviewChannels(this)
-        for (channel in mChannels) {
-            if (channel.id in hiddenChannels) {
-                continue
-            }
-
-            val previewPrograms = Suggestions.getSuggestions(this, channel.id)
-                .take(5).filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
-            if (previewPrograms.isEmpty()) {
-                continue
-            }
-            mainItems.add(
-                Pair(
-                    channel.id, MainRowItem(
-                        Suggestions.getChannelTitle(this, channel),
-                        WatchNextAdapter(this, previewPrograms)
-                    )
-                )
-            )
-        }
-
-        // Add All apps -row
-        mAllAppsAdapter = AppsAdapter(this)
-        if (Channel.ALL_APPS_ID !in hiddenChannels) {
-            mainItems.add(
-                Pair(
-                    Channel.ALL_APPS_ID,
-                    MainRowItem(getString(R.string.other_apps), mAllAppsAdapter)
-                )
-            )
-        }
-
+        mFavoritesAdapter = FavoritesAdapter(this@MainActivity)
         mMainVerticalGridView = findViewById(R.id.main_vertical_grid)
-        mMainVerticalAdapter = MainVerticalAdapter(this,
-            mainItems.orderSuggestions(Suggestions.getChannelOrder(this)) { it.first } as ArrayList)
 
-        mMainVerticalGridView.adapter = mMainVerticalAdapter
+        lifecycleScope.launch {
+            val mainItems = getMainRows()
+            mMainVerticalAdapter = MainVerticalAdapter(this@MainActivity, mainItems)
+            mMainVerticalGridView.adapter = mMainVerticalAdapter
+        }
 
         val settingButton: ImageButton = findViewById(R.id.settings_button)
         settingButton.setOnClickListener {
@@ -235,5 +177,75 @@ class MainActivity : Activity() {
             val pos = mMainVerticalAdapter.findChannelIndex(channelId)
             mMainVerticalGridView.layoutManager?.scrollToPosition(pos)
         }
+    }
+
+    private suspend fun getMainRows(): ArrayList<Pair<Long, MainRowItem>> {
+        val mainItems: ArrayList<Pair<Long, MainRowItem>> = ArrayList()
+        val hiddenChannels = Suggestions.getHiddenChannels(this@MainActivity)
+
+        // Add favorites-row. Can't be hidden
+        mainItems.add(
+            Pair(
+                Channel.FAVORITE_APPS_ID,
+                MainRowItem(getString(R.string.favorites), mFavoritesAdapter)
+            )
+        )
+
+        // Add watch next -row
+        if (Channel.WATCH_NEXT_ID !in hiddenChannels) {
+            mainItems.add(
+                Pair(
+                    Channel.WATCH_NEXT_ID, MainRowItem(
+                        getString(R.string.watch_next), WatchNextAdapter(
+                            this@MainActivity,
+                            Suggestions.getWatchNextPrograms(this@MainActivity)
+                                .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
+                        )
+                    )
+                )
+            )
+        }
+
+        // Add preview channels from apps
+        mChannels = Suggestions.getPreviewChannelsAsync(this@MainActivity)
+        mainItems.addAll(getMainChannelRows(hiddenChannels))
+
+        // Add All apps -row
+        mAllAppsAdapter = AppsAdapter(this@MainActivity)
+        if (Channel.ALL_APPS_ID !in hiddenChannels) {
+            mainItems.add(
+                Pair(
+                    Channel.ALL_APPS_ID,
+                    MainRowItem(getString(R.string.other_apps), mAllAppsAdapter)
+                )
+            )
+        }
+
+        return mainItems.orderSuggestions(Suggestions.getChannelOrder(this@MainActivity)) { it.first } as ArrayList
+    }
+
+    private suspend fun getMainChannelRows(hiddenChannels: ArrayList<Long>): ArrayList<Pair<Long, MainRowItem>> {
+        val mainItems: ArrayList<Pair<Long, MainRowItem>> = ArrayList()
+        for (channel in mChannels) {
+            if (channel.id in hiddenChannels) {
+                continue
+            }
+
+            val previewPrograms =
+                Suggestions.getSuggestionsAsync(this@MainActivity, channel.id).take(5)
+                    .filterIsInstance<BasePreviewProgram>() as ArrayList<BasePreviewProgram>
+            if (previewPrograms.isEmpty()) {
+                continue
+            }
+            mainItems.add(
+                Pair(
+                    channel.id, MainRowItem(
+                        Suggestions.getChannelTitle(this@MainActivity, channel),
+                        WatchNextAdapter(this@MainActivity, previewPrograms)
+                    )
+                )
+            )
+        }
+        return mainItems
     }
 }
