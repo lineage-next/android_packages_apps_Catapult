@@ -12,6 +12,7 @@ import androidx.tvprovider.media.tv.WatchNextProgram
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.lineageos.tv.launcher.R
+import org.lineageos.tv.launcher.model.Channel
 
 @SuppressLint("RestrictedApi")
 object Suggestions {
@@ -216,6 +217,11 @@ object Suggestions {
     }
 
     fun <T, K> List<T>.orderSuggestions(orderIds: List<K>, idSelector: (T) -> K?): List<T> {
+        if (orderIds.isEmpty()) {
+            val (presentItems, remainingItems) = this.partition { idSelector(it) == Channel.ALL_APPS_ID }
+            return remainingItems + presentItems
+        }
+
         val (presentItems, remainingItems) = this.partition { idSelector(it) in orderIds }
         val sortedPresentItems = presentItems.sortedBy { orderIds.indexOf(idSelector(it)) }
         return sortedPresentItems + remainingItems
