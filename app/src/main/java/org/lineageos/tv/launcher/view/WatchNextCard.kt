@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.tvprovider.media.tv.BasePreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
@@ -16,6 +17,7 @@ import org.lineageos.tv.launcher.R
 class WatchNextCard : Card, View.OnFocusChangeListener {
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     private var mTitle: TextView? = null
+    private val mProgressView: ProgressBar
 
     constructor(context: Context?) : super(context)
 
@@ -31,6 +33,7 @@ class WatchNextCard : Card, View.OnFocusChangeListener {
         stateListAnimator =
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
         onFocusChangeListener = this
+        mProgressView = findViewById(R.id.watch_progress)
     }
 
     override fun inflate() {
@@ -60,6 +63,15 @@ class WatchNextCard : Card, View.OnFocusChangeListener {
         mBannerView.visibility = View.VISIBLE
         mLaunchIntent = info.intent
         mTitle?.text = info.title
+
+        if (info.lastPlaybackPositionMillis != -1 && info.durationMillis != -1) {
+            val percentWatched =
+                ((info.lastPlaybackPositionMillis.toDouble() / info.durationMillis) * 100).toInt()
+            if (percentWatched > 3) {
+                mProgressView.progress = percentWatched
+                mProgressView.visibility = View.VISIBLE
+            }
+        }
 
         mBannerView.load(info.posterArtUri) {
             crossfade(750)
