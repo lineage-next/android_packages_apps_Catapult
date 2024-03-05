@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
@@ -16,6 +17,7 @@ open class AppCard : Card, View.OnFocusChangeListener {
     private val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
+    private val mCardContainer: LinearLayout by lazy { findViewById(R.id.card_container) }
     private var mHasFocus: Boolean = false
 
     constructor(context: Context?) : super(context)
@@ -49,6 +51,7 @@ open class AppCard : Card, View.OnFocusChangeListener {
             mBannerView.setImageDrawable(appInfo.mBanner)
             mBannerView.visibility = View.VISIBLE
             mIconContainer.visibility = View.GONE
+            mCardContainer.background = AppCompatResources.getDrawable(context, R.drawable.card_border_only)
         } else {
             // App with an icon
             mIconView.setImageDrawable(appInfo.mIcon)
