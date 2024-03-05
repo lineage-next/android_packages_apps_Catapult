@@ -16,6 +16,7 @@ open class AppCard : Card, View.OnFocusChangeListener {
     private val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
     private val mIconContainer: LinearLayout by lazy { findViewById(R.id.app_with_icon) }
+    private var mHasFocus: Boolean = false
 
     constructor(context: Context?) : super(context)
 
@@ -56,9 +57,15 @@ open class AppCard : Card, View.OnFocusChangeListener {
 
     override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (hasFocus) {
-            mNameView.postDelayed({ mNameView.isSelected = true }, 2000)
+            mHasFocus = true
+            mNameView.postDelayed({
+                if (mHasFocus) {
+                    mNameView.isSelected = true
+                }
+            }, 2000)
         } else {
             mNameView.isSelected = false
+            mHasFocus = false
         }
     }
 }
