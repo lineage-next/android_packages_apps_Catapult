@@ -19,7 +19,7 @@
         android:background="@drawable/card_border_only">
         <ImageView
             android:id="@+id/app_banner"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/card_border_only"
             android:backgroundTint="@android:color/black"

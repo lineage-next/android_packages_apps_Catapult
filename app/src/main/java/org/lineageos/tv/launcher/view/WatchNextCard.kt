@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.tvprovider.media.tv.BasePreviewProgram
 import androidx.tvprovider.media.tv.TvContractCompat
 import coil.load
@@ -74,7 +75,8 @@ class WatchNextCard : Card, View.OnFocusChangeListener {
         }
 
         mBannerView.load(info.posterArtUri) {
-            crossfade(750)
+            placeholder(AppCompatResources.getDrawable(context, R.drawable.watch_next_placeholder))
+            crossfade(500)
         }
     }
 
