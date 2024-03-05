@@ -53,7 +53,7 @@ class MainActivity : FragmentActivity() {
 
         val settingButton: ImageButton = findViewById(R.id.settings_button)
         settingButton.setOnClickListener {
-            startActivityForResult(Intent(android.provider.Settings.ACTION_SETTINGS), 0);
+            startActivity(Intent(android.provider.Settings.ACTION_SETTINGS));
         }
 
         AppManager.onFavoriteAddedCallback = ::onFavoriteAdded
