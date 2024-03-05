@@ -11,7 +11,7 @@ import org.lineageos.tv.launcher.R
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.Launchable
 
-open class AppCard : Card {
+open class AppCard : Card, View.OnFocusChangeListener {
     private val mIconView: ImageView by lazy { findViewById(R.id.app_icon) }
     private val mNameView: TextView by lazy { findViewById(R.id.app_name) }
     private val mBannerView: ImageView by lazy { findViewById(R.id.app_banner) }
@@ -30,6 +30,7 @@ open class AppCard : Card {
     init {
         stateListAnimator =
             AnimatorInflater.loadStateListAnimator(context, R.anim.app_card_state_animator)
+        onFocusChangeListener = this
     }
 
     override fun inflate() {
@@ -50,6 +51,14 @@ open class AppCard : Card {
         } else {
             // App with an icon
             mIconView.setImageDrawable(appInfo.mIcon)
+        }
+    }
+
+    override fun onFocusChange(v: View, hasFocus: Boolean) {
+        if (hasFocus) {
+            mNameView.postDelayed({ mNameView.isSelected = true }, 2000)
+        } else {
+            mNameView.isSelected = false
         }
     }
 }
