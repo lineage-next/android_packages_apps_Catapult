@@ -10,10 +10,11 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.tvprovider.media.tv.WatchNextProgram
+import androidx.tvprovider.media.tv.PreviewProgram
 import org.lineageos.tv.launcher.view.WatchNextCard
 
-class WatchNextAdapter : ListAdapter<WatchNextProgram, WatchNextAdapter.ViewHolder>(DIFF_UTIL) {
+class PreviewProgramsAdapter :
+    ListAdapter<PreviewProgram, PreviewProgramsAdapter.ViewHolder>(diffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         WatchNextCard(parent.context).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -28,31 +29,34 @@ class WatchNextAdapter : ListAdapter<WatchNextProgram, WatchNextAdapter.ViewHold
         holder.bind(getItem(position))
     }
 
-    inner class ViewHolder(private val card: WatchNextCard) : RecyclerView.ViewHolder(card) {
+    inner class ViewHolder(
+        private val watchNextCard: WatchNextCard
+    ) : RecyclerView.ViewHolder(watchNextCard) {
         init {
-            card.setOnClickListener {
-                val context = card.context
+            watchNextCard.setOnClickListener {
+                val context = watchNextCard.context
 
-                context.startActivity(card.launchIntent)
-                Toast.makeText(context, card.label, Toast.LENGTH_SHORT).show()
+                context.startActivity(watchNextCard.launchIntent)
+                Toast.makeText(context, watchNextCard.label, Toast.LENGTH_SHORT).show()
             }
         }
 
-        fun bind(watchNextProgram: WatchNextProgram) {
-            card.setInfo(watchNextProgram)
+        fun bind(previewProgram: PreviewProgram) {
+            watchNextCard.setInfo(previewProgram)
         }
     }
 
     companion object {
-        private val DIFF_UTIL = object : DiffUtil.ItemCallback<WatchNextProgram>() {
+        private val diffCallback = object : DiffUtil.ItemCallback<PreviewProgram>() {
+            @Suppress("RestrictedApi")
             override fun areItemsTheSame(
-                oldItem: WatchNextProgram,
-                newItem: WatchNextProgram
-            ) = oldItem.id == oldItem.id
+                oldItem: PreviewProgram,
+                newItem: PreviewProgram
+            ) = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
-                oldItem: WatchNextProgram,
-                newItem: WatchNextProgram
+                oldItem: PreviewProgram,
+                newItem: PreviewProgram
             ) = oldItem.hasAnyUpdatedValues(newItem)
         }
     }
