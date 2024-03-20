@@ -15,7 +15,16 @@
     <string name="order_channels_guide">To order channels, long press on a wanted channel and move it to the desired position.</string>
     <string name="search">Search</string>
     <string name="modify_favorites">Modify your favorite apps</string>
+    <string name="system_modal">System options</string>
+    <string name="sleep">Sleep</string>
+    <string name="no_notifications">No notifications</string>
+    <string name="network_status">Network\n%1$s</string>
+    <string name="bluetooth_status">Bluetooth\n%1$s</string>
+    <string name="not_connected">Not connected</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 
     <!-- Toast messages -->
     <string name="app_permissions_toast">Permissions not granted by the user.</string>
+    <string name="unknown">Unknown</string>
 </resources>
