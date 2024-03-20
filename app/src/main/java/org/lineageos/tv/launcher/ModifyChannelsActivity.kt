@@ -6,11 +6,8 @@
 package org.lineageos.tv.launcher
 
 import android.os.Bundle
-import android.view.Gravity
-import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.leanback.widget.VerticalGridView
 import androidx.lifecycle.Lifecycle

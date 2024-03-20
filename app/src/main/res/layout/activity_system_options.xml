@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorOnSurfaceInverse"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="end"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mon, 4 March"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/white_disabled" />
+
+            <TextClock
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:weightSum="4">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sleep_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="2"
+                android:text="@string/sleep"
+                app:icon="@drawable/ic_moon"
+                style="@style/SystemOptionsButtonStyle" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settings_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_settings"
+                app:iconPadding="0dp"
+                style="@style/SystemOptionsButtonStyle" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/power_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_power"
+                app:iconPadding="0dp"
+                style="@style/SystemOptionsButtonStyle" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/network_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/network_status"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                app:icon="@drawable/ic_wifi_3"
+                app:iconGravity="start"
+                style="@style/SystemOptionsButtonStyle" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bluetooth_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/bluetooth_status"
+                android:layout_weight="1"
+                app:icon="@drawable/ic_bluetooth"
+                app:iconGravity="start"
+                style="@style/SystemOptionsButtonStyle" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_notifications"
+            android:layout_gravity="center"
+            android:textAppearance="?attr/textAppearanceBody2" />
+    </LinearLayout>
+</LinearLayout>
