@@ -25,7 +25,7 @@ import org.lineageos.tv.launcher.utils.PermissionsGatedCallback
 import org.lineageos.tv.launcher.utils.Suggestions
 import org.lineageos.tv.launcher.viewmodels.ModifyChannelsViewModel
 
-class ModifyChannelsActivity : AppCompatActivity(R.layout.activity_modify_channels) {
+class ModifyChannelsActivity : ModalActivity(R.layout.activity_modify_channels) {
     // View models
     private val model: ModifyChannelsViewModel by viewModels()
 
@@ -56,13 +56,6 @@ class ModifyChannelsActivity : AppCompatActivity(R.layout.activity_modify_channe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val layoutParams = window.attributes.apply {
-            gravity = Gravity.END
-            width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = WindowManager.LayoutParams.MATCH_PARENT
-        }
-        window.attributes = layoutParams
 
         modifyChannelsAdapter.onChannelToggled = { channel, enabled ->
             Suggestions.toggleChannel(this, channel.id, enabled)
