@@ -26,7 +26,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATIONS"
+    <uses-permission
+        android:name="android.permission.ACCESS_NOTIFICATIONS"
         tools:ignore="ProtectedPermissions" />
 
     <queries>
@@ -68,6 +69,15 @@
         <activity
             android:name=".SystemOptionsActivity"
             android:theme="@style/Theme.Catapult.SideActivity" />
+
+        <service
+            android:name=".notification.TvNotificationListener"
+            android:exported="false"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
