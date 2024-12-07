@@ -20,6 +20,8 @@ android_app {
     product_specific: true,
     privileged: true,
 
+    required: ["default_permissions_org.lineageos.tv.launcher"],
+
     static_libs: [
         // DO NOT EDIT THIS SECTION MANUALLY
         "androidx.activity_activity-ktx",
@@ -33,4 +35,12 @@ android_app {
         "Catapult_io.coil-kt_coil",
         "kotlin-stdlib-jdk8",
     ],
+}
+
+prebuilt_etc {
+    name: "default_permissions_org.lineageos.tv.launcher",
+    product_specific: true,
+    sub_dir: "default-permissions",
+    src: "default_permissions_org.lineageos.tv.launcher.xml",
+    filename_from_src: true,
 }
