@@ -5,6 +5,8 @@
 
 package org.lineageos.tv.launcher
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.role.RoleManager
 import android.content.ComponentName
 import android.content.Context
@@ -24,6 +26,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.leanback.widget.VerticalGridView
@@ -32,6 +36,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.lineageos.tv.launcher.adapter.AllAppsAdapter
@@ -165,7 +172,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         settingButton.setOnClickListener {
-            startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
+            //startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
+            showTestNotifications()
         }
 
         systemModalButton.setOnClickListener {
@@ -308,4 +316,87 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
             override fun onServiceDisconnected(name: ComponentName?) {}
         }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = channelDescription
+        }
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun showTestNotifications() {
+        createNotificationChannel()
+
+        // Use a coroutine to manage delays
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(3000)
+            val notificationManager = NotificationManagerCompat.from(this@MainActivity)
+
+            // Notification 1
+            val notification1 = NotificationCompat.Builder(this@MainActivity, channelId)
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentTitle("1 HIGH prio")
+                .setContentText("This is the first test notification.")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .extend(
+                    NotificationCompat.TvExtender()
+                        .setChannelId(channelId)
+                )
+                .build()
+
+            // Post the first notification
+            notificationManager.notify(1, notification1)
+
+            // Add a delay of 3 seconds
+            delay(3000)
+
+            // Notification 2
+            val notification2 = NotificationCompat.Builder(this@MainActivity, channelId)
+                .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                .setContentTitle("2 MAX pio")
+                .setContentText("This is the second test notification.")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setAutoCancel(true)
+                .extend(
+                    NotificationCompat.TvExtender()
+                        .setChannelId(channelId)
+                )
+                .build()
+
+            // Post the second notification
+            notificationManager.notify(2, notification2)
+
+            // Add a delay of 3 seconds
+            delay(3000)
+
+            // Notification 3
+            val notification3 = NotificationCompat.Builder(this@MainActivity, channelId)
+                .setSmallIcon(android.R.drawable.stat_notify_chat)
+                .setContentTitle("3 LOW prio")
+                .setContentText("This is the third test notification.")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setAutoCancel(true)
+                .extend(
+                    NotificationCompat.TvExtender()
+                        .setChannelId(channelId)
+                )
+                .build()
+
+            // Post the third notification
+            notificationManager.notify(3, notification3)
+        }
+    }
+
+    companion object {
+        private val channelId = "test_notifications"
+        private val channelName = "Test Notifications"
+        private val channelDescription = "Channel for testing notifications"
+    }
 }
