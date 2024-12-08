@@ -15,6 +15,7 @@ import android.content.ServiceConnection
 import android.icu.text.SimpleDateFormat
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
@@ -65,6 +66,12 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Animate
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_right, R.anim.slide_out_right)
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.slide_in_right, R.anim.slide_out_right)
+        }
 
         // Date
         val currentDate = Calendar.getInstance().time
