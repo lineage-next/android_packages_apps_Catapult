@@ -24,6 +24,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -34,12 +35,13 @@ import com.google.android.material.button.MaterialButton
 import org.lineageos.tv.launcher.notification.NotificationAdapter
 import org.lineageos.tv.launcher.notification.NotificationUtils
 import org.lineageos.tv.launcher.notification.TvNotificationListener
+import org.lineageos.tv.launcher.view.NotificationItem
 import java.util.Calendar
 import java.util.Locale
 
 
 class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
-    NotificationAdapter.OnItemClickListener {
+    NotificationAdapter.OnItemActionListener {
     // Views
     private val dateTextView by lazy { findViewById<TextView>(R.id.date) }
     private val sleepButton by lazy { findViewById<MaterialButton>(R.id.sleep_button) }
@@ -69,8 +71,16 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
         // Animate
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_right, R.anim.slide_out_right)
-            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.slide_in_right, R.anim.slide_out_right)
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_OPEN,
+                R.anim.slide_in_right,
+                R.anim.slide_out_right
+            )
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_CLOSE,
+                R.anim.slide_in_right,
+                R.anim.slide_out_right
+            )
         }
 
         // Date
@@ -226,8 +236,8 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
             }
         }
 
-    override fun onItemClick(position: Int, sbn: StatusBarNotification) {
-        val notification = sbn.notification
+    override fun onItemClick(view: View, position: Int) {
+        val notification = (view as NotificationItem).statusBarNotification?.notification ?: return
         try {
             if (notification.contentIntent != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -241,14 +251,59 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
                 }
             }
 
-            if (NotificationUtils.shouldAutoCancel(notification)) {
-                notificationListener?.cancelNotification(sbn.key)
-            }
+            view.statusBarNotification?.let { cancelNotification(it) }
         } catch (e: PendingIntent.CanceledException) {
             Log.d(
                 "SystemOptionsActivity",
                 "Pending intent canceled for : ${notification.contentIntent}"
             )
+        }
+    }
+
+    override fun onKey(view: View, keyCode: Int, event: KeyEvent): Boolean {
+        if (event.action != KeyEvent.ACTION_DOWN || view !is NotificationItem) {
+            return false
+        }
+
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (view.swipeStatus == NotificationItem.SwipeStatus.LEFT) {
+                    view.resetState()
+                    view.statusBarNotification?.let { cancelNotification(it) }
+                } else {
+                    view.animateDismissLeft()
+                }
+                return true
+            }
+
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (view.swipeStatus == NotificationItem.SwipeStatus.RIGHT) {
+                    view.resetState()
+                    view.statusBarNotification?.let { cancelNotification(it) }
+                } else {
+                    view.animateDismissRight()
+                }
+                return true
+            }
+
+            KeyEvent.KEYCODE_DPAD_CENTER -> {
+                if (view.swipeStatus != NotificationItem.SwipeStatus.NONE) {
+                    view.resetState()
+                    view.statusBarNotification?.let { cancelNotification(it) }
+                }
+                return true
+            }
+
+            else -> {
+                view.animateCloseDismiss()
+                return false
+            }
+        }
+    }
+
+    private fun cancelNotification(sbn: StatusBarNotification) {
+        if (NotificationUtils.shouldAutoCancel(sbn.notification)) {
+            notificationListener?.cancelNotification(sbn.key)
         }
     }
 
