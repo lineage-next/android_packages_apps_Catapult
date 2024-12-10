@@ -6,9 +6,13 @@
 package org.lineageos.tv.launcher
 
 import android.app.role.RoleManager
+import android.content.ComponentName
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.transition.Slide
 import android.transition.TransitionManager
 import android.view.Gravity
@@ -19,6 +23,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.leanback.widget.VerticalGridView
@@ -40,6 +45,8 @@ import org.lineageos.tv.launcher.ext.roleCanBeRequested
 import org.lineageos.tv.launcher.model.AppInfo
 import org.lineageos.tv.launcher.model.InternalChannel
 import org.lineageos.tv.launcher.model.MainRowItem
+import org.lineageos.tv.launcher.notification.NotificationUtils
+import org.lineageos.tv.launcher.notification.TvNotificationListener
 import org.lineageos.tv.launcher.utils.AppManager
 import org.lineageos.tv.launcher.utils.PermissionsGatedCallback
 import org.lineageos.tv.launcher.viewmodels.LauncherViewModel
@@ -54,6 +61,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val keyboardAssistantButton by lazy { findViewById<ImageButton>(R.id.keyboard_assistant) }
     private val mainVerticalGridView by lazy { findViewById<VerticalGridView>(R.id.main_vertical_grid) }
     private val settingButton by lazy { findViewById<ImageButton>(R.id.settings_button) }
+    private val systemModalButton by lazy { findViewById<ImageButton>(R.id.system_modal_button) }
     private val topBarContainer by lazy { findViewById<LinearLayout>(R.id.top_bar) }
     private val voiceAssistantButton by lazy { findViewById<ImageButton>(R.id.voice_assistant) }
 
@@ -73,6 +81,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val mainVerticalAdapter by lazy { MainVerticalAdapter() }
     private val watchNextAdapter by lazy { WatchNextAdapter() }
     private val previewChannelAdapters = mutableMapOf<Long, PreviewProgramsAdapter>()
+
+    private var notificationListener: TvNotificationListener? = null
+    private var notificationUpdateListener: TvNotificationListener.NotificationUpdateListener? =
+        null
 
     private val sharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -156,6 +168,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             startActivity(Intent(android.provider.Settings.ACTION_SETTINGS))
         }
 
+        systemModalButton.setOnClickListener {
+            startActivity(Intent(this@MainActivity, SystemOptionsActivity::class.java))
+        }
+
         val assistIntent = Intent(Intent.ACTION_ASSIST)
         assistIntent.resolveActivity(packageManager)?.also {
             setupAssistantButtons(assistIntent)
@@ -173,6 +189,27 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         settingButton.requestFocus()
 
         permissionsGatedCallback.runAfterPermissionsCheck()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (NotificationUtils.notificationPermissionGranted(this)) {
+            val intent = Intent(this, TvNotificationListener::class.java)
+            intent.setAction(TvNotificationListener.ACTION_LOCAL_BINDING)
+            bindService(intent, notificationListenerConnectionListener, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (NotificationUtils.notificationPermissionGranted(this)) {
+            setNotificationIcon()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notificationListener?.removeNotificationUpdateListener(notificationUpdateListener)
     }
 
     private fun setupAssistantButtons(assistIntent: Intent) {
@@ -240,4 +277,35 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 }
         }
     }
+
+    private fun setNotificationIcon() {
+        val hasActiveNotifications = notificationListener?.getNotifications()?.isNotEmpty() ?: false
+        if (hasActiveNotifications) {
+            systemModalButton.setImageDrawable(
+                AppCompatResources.getDrawable(this, R.drawable.ic_bell_active)
+            )
+        } else {
+            systemModalButton.setImageDrawable(
+                AppCompatResources.getDrawable(this, R.drawable.ic_bell)
+            )
+        }
+    }
+
+    private val notificationListenerConnectionListener: ServiceConnection =
+        object : ServiceConnection {
+            override fun onServiceConnected(className: ComponentName, binder: IBinder) {
+                notificationListener = (binder as TvNotificationListener.LocalBinder).getService()
+                setNotificationIcon()
+
+                notificationUpdateListener =
+                    object : TvNotificationListener.NotificationUpdateListener {
+                        override fun onNotificationsChanged() {
+                            setNotificationIcon()
+                        }
+                    }
+                notificationListener?.addNotificationUpdateListener(notificationUpdateListener)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName?) {}
+        }
 }
