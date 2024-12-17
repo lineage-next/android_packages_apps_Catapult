@@ -43,4 +43,10 @@
     <string name="allow_notification_access">Allow notification access</string>
     <string name="dismiss">Dismiss</string>
     <string name="connected">Connected</string>
+
+    <!-- ADB -->
+    <string name="enable_adb_network">Enable ADB over network</string>
+    <string name="disable_adb_network">Disable ADB over network</string>
+    <string name="adb_over_network_enabled">ADB over network enabled: %1$s</string>
+    <string name="adb_over_network_disabled">ADB over network disabled</string>
 </resources>

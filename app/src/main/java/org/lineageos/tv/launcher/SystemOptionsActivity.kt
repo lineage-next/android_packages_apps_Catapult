@@ -26,11 +26,15 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.ContextMenu
+import android.view.ContextMenu.ContextMenuInfo
 import android.view.KeyEvent
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManagerGlobal
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -45,6 +49,7 @@ import org.lineageos.tv.launcher.ext.networkCallbackFlow
 import org.lineageos.tv.launcher.notification.NotificationAdapter
 import org.lineageos.tv.launcher.notification.NotificationUtils
 import org.lineageos.tv.launcher.notification.ServiceConnectionState
+import org.lineageos.tv.launcher.utils.DeveloperOptions
 import org.lineageos.tv.launcher.view.NotificationItemView
 import org.lineageos.tv.launcher.viewmodels.NotificationViewModel
 import java.util.Calendar
@@ -76,6 +81,8 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
     private val notificationAdapter: NotificationAdapter by lazy { NotificationAdapter(this, this) }
 
     private val connectivityManager by lazy { getSystemService(ConnectivityManager::class.java)!! }
+
+    private lateinit var developerOptions: DeveloperOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +120,8 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
         notificationsVerticalGridView.adapter = notificationAdapter
 
+        developerOptions = DeveloperOptions(this)
+
         if (isSystemApp()) {
             sleepMaterialButton.setOnClickListener {
                 val pm: PowerManager = getSystemService(PowerManager::class.java) as PowerManager
@@ -126,6 +135,11 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
             powerMaterialButton.setOnClickListener {
                 val wm = WindowManagerGlobal.getWindowManagerService()
                 wm?.showGlobalActions()
+            }
+
+            // Developer options context menu
+            if (isDeveloperOptionsEnabled()) {
+                registerForContextMenu(settingsButton)
             }
         } else {
             sleepMaterialButton.visibility = View.GONE
@@ -226,6 +240,31 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
         super.onDestroy()
         if (NotificationUtils.notificationPermissionGranted(this)) {
             notificationViewModel.unbindService(this)
+        }
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View, menuInfo: ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        if (v.id == R.id.settingsMaterialButton) {
+            menuInflater.inflate(R.menu.developer_options, menu)
+
+            val menuItem = menu?.findItem(R.id.toggle_adb_network)
+            if (developerOptions.adbOverNetworkEnabled()) {
+                menuItem?.title = getString(R.string.disable_adb_network)
+            } else {
+                menuItem?.title = getString(R.string.enable_adb_network)
+            }
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.toggle_adb_network -> {
+                developerOptions.toggleAdbOverNetwork()
+                true
+            }
+
+            else -> super.onContextItemSelected(item)
         }
     }
 
@@ -397,6 +436,14 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
     private fun isSystemApp(): Boolean {
         return applicationInfo.flags and FLAG_SYSTEM != 0
+    }
+
+    private fun isDeveloperOptionsEnabled(): Boolean {
+        return Settings.Secure.getInt(
+            this.contentResolver,
+            Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
+            0
+        ) == 1
     }
 
     companion object {
