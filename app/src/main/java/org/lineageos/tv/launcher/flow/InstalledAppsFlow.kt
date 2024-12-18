@@ -15,6 +15,9 @@ import org.lineageos.tv.launcher.model.AppInfo
 class InstalledAppsFlow(private val context: Context) {
     private val packageManager = context.packageManager
     private val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
+        addCategory(Intent.CATEGORY_LAUNCHER)
+    }
+    private val leanbackLauncherIntent = Intent(Intent.ACTION_MAIN).apply {
         addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
     }
 
@@ -37,9 +40,12 @@ class InstalledAppsFlow(private val context: Context) {
             }
         }
 
-        packageManager.queryIntentActivities(launcherIntent, 0).mapNotNull { resolveInfo ->
+        (packageManager.queryIntentActivities(launcherIntent, 0).mapNotNull { resolveInfo ->
             AppInfo(resolveInfo, context)
-        }
+        } + packageManager.queryIntentActivities(leanbackLauncherIntent, 0)
+            .mapNotNull { resolveInfo ->
+                AppInfo(resolveInfo, context)
+            }).distinctBy { it.launchIntent?.resolveActivityInfo(packageManager, 0)?.name }
     }
 
     companion object {
