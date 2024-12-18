@@ -14,13 +14,20 @@ android_app {
     resource_dirs: ["src/main/res"],
     manifest: "src/main/AndroidManifest.xml",
 
-    sdk_version: "35",
-    product_specific: true,
+    platform_apis: true,
+    system_ext_specific: true,
+    certificate: "platform",
     privileged: true,
 
     overrides: [
         "TvLauncherNoGMS",
         "TvSampleLeanbackLauncher",
+        "TVLauncher",
+    ],
+
+    required: [
+        "default_permissions_org.lineageos.tv.launcher",
+        "privapp_whitelist_org.lineageos.tv.launcher",
     ],
 
     static_libs: [
@@ -36,4 +43,20 @@ android_app {
         "Catapult_io.coil-kt_coil",
         "kotlin-stdlib-jdk8",
     ],
+}
+
+prebuilt_etc {
+    name: "privapp_whitelist_org.lineageos.tv.launcher",
+    system_ext_specific: true,
+    sub_dir: "permissions",
+    src: "privapp_whitelist_org.lineageos.tv.launcher.xml",
+    filename_from_src: true,
+}
+
+prebuilt_etc {
+    name: "default_permissions_org.lineageos.tv.launcher",
+    system_ext_specific: true,
+    sub_dir: "default-permissions",
+    src: "default_permissions_org.lineageos.tv.launcher.xml",
+    filename_from_src: true,
 }

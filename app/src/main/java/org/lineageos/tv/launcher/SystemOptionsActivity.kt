@@ -9,6 +9,7 @@ import android.app.ActivityOptions
 import android.app.PendingIntent
 import android.bluetooth.BluetoothManager
 import android.content.Intent
+import android.content.pm.ApplicationInfo.FLAG_SYSTEM
 import android.icu.text.DateFormat
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -17,6 +18,8 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.os.SystemClock
 import android.provider.Settings
 import android.service.notification.StatusBarNotification
 import android.text.Spannable
@@ -25,6 +28,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManagerGlobal
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -51,16 +55,16 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
     private val notificationViewModel: NotificationViewModel by viewModels()
 
     // Views
-    private val allowNotificationAccessMaterialButton by lazy { findViewById<MaterialButton>(R.id.allowNotificationAccessMaterialButton) }
-    private val bluetoothMaterialButton by lazy { findViewById<MaterialButton>(R.id.bluetoothMaterialButton) }
-    private val dateTextView by lazy { findViewById<TextView>(R.id.dateTextView) }
-    private val networkMaterialButton by lazy { findViewById<MaterialButton>(R.id.networkMaterialButton) }
-    private val noNotificationAccessLinearLayout by lazy { findViewById<LinearLayout>(R.id.noNotificationAccessLinearLayout) }
-    private val noNotificationsTextView by lazy { findViewById<TextView>(R.id.noNotificationsTextView) }
-    private val notificationsVerticalGridView by lazy { findViewById<VerticalGridView>(R.id.notificationsVerticalGridView) }
-    private val powerMaterialButton by lazy { findViewById<MaterialButton>(R.id.powerMaterialButton) }
-    private val settingsButton by lazy { findViewById<MaterialButton>(R.id.settingsMaterialButton) }
-    private val sleepMaterialButton by lazy { findViewById<MaterialButton>(R.id.sleepMaterialButton) }
+    private val allowNotificationAccessMaterialButton by lazy { findViewById<MaterialButton>(R.id.allowNotificationAccessMaterialButton)!! }
+    private val bluetoothMaterialButton by lazy { findViewById<MaterialButton>(R.id.bluetoothMaterialButton)!! }
+    private val dateTextView by lazy { findViewById<TextView>(R.id.dateTextView)!! }
+    private val networkMaterialButton by lazy { findViewById<MaterialButton>(R.id.networkMaterialButton)!! }
+    private val noNotificationAccessLinearLayout by lazy { findViewById<LinearLayout>(R.id.noNotificationAccessLinearLayout)!! }
+    private val noNotificationsTextView by lazy { findViewById<TextView>(R.id.noNotificationsTextView)!! }
+    private val notificationsVerticalGridView by lazy { findViewById<VerticalGridView>(R.id.notificationsVerticalGridView)!! }
+    private val powerMaterialButton by lazy { findViewById<MaterialButton>(R.id.powerMaterialButton)!! }
+    private val settingsButton by lazy { findViewById<MaterialButton>(R.id.settingsMaterialButton)!! }
+    private val sleepMaterialButton by lazy { findViewById<MaterialButton>(R.id.sleepMaterialButton)!! }
 
     private val colorStateList by lazy {
         ContextCompat.getColorStateList(
@@ -71,7 +75,7 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
     private val notificationAdapter: NotificationAdapter by lazy { NotificationAdapter(this, this) }
 
-    private val connectivityManager by lazy { getSystemService(ConnectivityManager::class.java) }
+    private val connectivityManager by lazy { getSystemService(ConnectivityManager::class.java)!! }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +112,25 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
         }
 
         notificationsVerticalGridView.adapter = notificationAdapter
+
+        if (isSystemApp()) {
+            sleepMaterialButton.setOnClickListener {
+                val pm: PowerManager = getSystemService(PowerManager::class.java) as PowerManager
+                pm.goToSleep(
+                    SystemClock.uptimeMillis(),
+                    PowerManager.GO_TO_SLEEP_REASON_POWER_BUTTON,
+                    0
+                )
+            }
+
+            powerMaterialButton.setOnClickListener {
+                val wm = WindowManagerGlobal.getWindowManagerService()
+                wm?.showGlobalActions()
+            }
+        } else {
+            sleepMaterialButton.visibility = View.GONE
+            powerMaterialButton.visibility = View.GONE
+        }
 
         // WIFI callbacks
         val request = NetworkRequest.Builder()
@@ -201,7 +224,9 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
     override fun onDestroy() {
         super.onDestroy()
-        notificationViewModel.unbindService(this)
+        if (NotificationUtils.notificationPermissionGranted(this)) {
+            notificationViewModel.unbindService(this)
+        }
     }
 
     private fun setNetworkButton(
@@ -231,7 +256,7 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
                 // WIFI connection
                 networkString = resources.getString(R.string.connected)
                 if (wifiInfo != null) {
-                    val wifiManager = getSystemService(WifiManager::class.java)
+                    val wifiManager = getSystemService(WifiManager::class.java)!!
                     val wifiStrength = (wifiManager.calculateSignalLevel(wifiInfo.rssi)
                         .toFloat() / wifiManager.maxSignalLevel * wifiManager.maxSignalLevel).toInt()
                     networkMaterialButton.icon =
@@ -259,7 +284,7 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
 
     private fun setBluetoothButton() {
         var btString = resources.getString(R.string.disabled)
-        val bluetoothAdapter = getSystemService(BluetoothManager::class.java).adapter
+        val bluetoothAdapter = getSystemService(BluetoothManager::class.java)?.adapter
         if (bluetoothAdapter != null && bluetoothAdapter.isEnabled) {
             btString = resources.getString(R.string.enabled)
         }
@@ -321,6 +346,10 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
             return false
         }
 
+        if (view.statusBarNotification?.isOngoing == true) {
+            return false
+        }
+
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT -> {
                 if (view.swipeStatus == NotificationItemView.SwipeStatus.LEFT) {
@@ -346,8 +375,9 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
                 if (view.swipeStatus != NotificationItemView.SwipeStatus.NONE) {
                     view.resetState()
                     view.statusBarNotification?.let { cancelNotification(it) }
+                    return true
                 }
-                return true
+                return false
             }
 
             else -> {
@@ -363,6 +393,10 @@ class SystemOptionsActivity : ModalActivity(R.layout.activity_system_options),
         if (NotificationUtils.shouldAutoCancel(sbn.notification)) {
             notificationViewModel.cancelNotification(sbn.key)
         }
+    }
+
+    private fun isSystemApp(): Boolean {
+        return applicationInfo.flags and FLAG_SYSTEM != 0
     }
 
     companion object {

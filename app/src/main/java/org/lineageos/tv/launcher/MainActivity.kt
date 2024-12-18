@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -54,17 +55,17 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val notificationViewModel: NotificationViewModel by viewModels()
 
     // Views
-    private val assistantButtonsContainer by lazy { findViewById<LinearLayout>(R.id.assistant_buttons) }
-    private val assistantShowButton by lazy { findViewById<TextView>(R.id.assistant_title) }
-    private val keyboardAssistantButton by lazy { findViewById<ImageButton>(R.id.keyboard_assistant) }
-    private val mainVerticalGridView by lazy { findViewById<VerticalGridView>(R.id.main_vertical_grid) }
-    private val settingButton by lazy { findViewById<ImageButton>(R.id.settingsMaterialButton) }
-    private val systemModalButton by lazy { findViewById<ImageButton>(R.id.system_modal_button) }
-    private val topBarContainer by lazy { findViewById<LinearLayout>(R.id.top_bar) }
-    private val voiceAssistantButton by lazy { findViewById<ImageButton>(R.id.voice_assistant) }
+    private val assistantButtonsContainer by lazy { findViewById<LinearLayout>(R.id.assistant_buttons)!! }
+    private val assistantShowButton by lazy { findViewById<TextView>(R.id.assistant_title)!! }
+    private val keyboardAssistantButton by lazy { findViewById<ImageButton>(R.id.keyboard_assistant)!! }
+    private val mainVerticalGridView by lazy { findViewById<VerticalGridView>(R.id.main_vertical_grid)!! }
+    private val settingButton by lazy { findViewById<ImageButton>(R.id.settingsMaterialButton)!! }
+    private val systemModalButton by lazy { findViewById<ImageButton>(R.id.system_modal_button)!! }
+    private val topBarContainer by lazy { findViewById<LinearLayout>(R.id.top_bar)!! }
+    private val voiceAssistantButton by lazy { findViewById<ImageButton>(R.id.voice_assistant)!! }
 
     // System services
-    private val roleManager by lazy { getSystemService(RoleManager::class.java) }
+    private val roleManager by lazy { getSystemService(RoleManager::class.java)!! }
 
     // Activity request launchers
     private val homeRoleActivityRequestLauncher = registerForActivityResult(
@@ -184,6 +185,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         permissionsGatedCallback.runAfterPermissionsCheck()
 
+        onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 notificationViewModel.state.collect { state ->
@@ -234,7 +240,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onDestroy() {
         super.onDestroy()
 
-        notificationViewModel.unbindService(this)
+        if (NotificationUtils.notificationPermissionGranted(this)) {
+            notificationViewModel.unbindService(this)
+        }
     }
 
     private fun setupAssistantButtons(assistIntent: Intent) {
